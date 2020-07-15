@@ -40,7 +40,21 @@ struct persona{
 
 
 int main(){
-
+	
+	int opcion = 1;
+	
+	while(opcion){
+		printf("\t\t\t\t\tMENU DE CONTROL DE MULTAS\n");
+		printf("\t\t\t\tALCALDIA DEL MUNICIPIO DE CHACAO, CARACAS\n\n");
+		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
+		printf("\t\t\t\t\t(1)--MANTENIMIENTO\n");
+		printf("\t\t\t\t\t(2)--OPERACIONES Y CONSULTAS\n");
+		printf("\t\t\t\t\t(3)--SALIR\n\n\t\t\t\t\t\t\t");
+		scanf("%i",&opcion);
+		system("cls");
+	}
+		
+	
 	return 0;
 }
 
