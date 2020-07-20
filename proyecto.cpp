@@ -18,14 +18,16 @@ struct infracciones{
 	char tipoInfraccion[40];
 	int monto;
 	int pagado;
+	struct infracciones *prox;
 };
 
 struct vehiculos{
 	char placa[10];
 	char marca[10];
 	char modelo[10];
-	struct fecha yyVehiculo;
+	struct fecha annio;
 	char color[10];
+	struct vehiculos *prox;
 	struct infracciones * datosInfraccion;
 };
 
@@ -245,7 +247,3 @@ void menuPrincipal(){
 	
 
 }
-
-
-
-
