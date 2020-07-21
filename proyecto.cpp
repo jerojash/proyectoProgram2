@@ -1,5 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include"iostream"
+#include <string.h>
+
+using namespace std;
 
 struct fecha{
 	int yy;
@@ -8,8 +12,8 @@ struct fecha{
 };
 
 struct lugar{
-	char ciudad[40];
-	char direccion[40];
+	char ciudad[80];
+	char direccion[80];
 };
 
 struct infraccion{
@@ -32,16 +36,22 @@ struct vehiculos{
 };
 
 struct persona{
+	char nombre[40];
+	char apellidos[40];
 	long int cedula;
-	char nombre[20];
 	struct fecha fechaNacimiento;
-	struct lugar direccionNacimiento;
+	struct lugar place;
 	struct persona *personaProx;
 };
 
 struct persona *p = NULL;
 struct vehiculo *v = NULL;
 struct infraccion *i =NULL;
+
+void freeBuffer(){
+	char c;
+	while ((c = getchar()) != '\n' && c != EOF);
+}
 
 void encabezado();
 
@@ -88,42 +98,109 @@ void encabezado(){
 }
 
 void agregarPersona(struct persona **p){
+	
+	freeBuffer();
 	int num;
-	char c;
-	while ((c = getchar()) != '\n' && c != EOF);
 	struct persona *aux = new struct persona;
 	system("cls");
-	printf("\n\t\t\tIngrese el nombre: "); 
+	
+	printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
 	gets(aux->nombre);
+	
+	while(strlen(aux->nombre)>20){                                     //**********VALIDACION DEL NOMBRE*****************************
+		printf("\n\n\t\t\t\tSolo se permiten max 20 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
+		gets(aux->nombre);
+	}
+	
+	printf("\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
+	gets(aux->apellidos);
+	
+	while(strlen(aux->apellidos)>20){                                //**********VALIDACION DEL APELLIDO*****************************
+		printf("\n\n\t\t\t\tSolo se permiten max 20 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
+		gets(aux->apellidos);
+	}
+	
 	printf("\n\t\t\tIngrese la cedula: ");
 	scanf("%li",&aux->cedula);
+	
 	printf("\n\t\t\tIngrese el dia (dd) de nacimiento: ");
-	scanf("%i",&aux->fechaNacimiento.dd);
-	while((aux->fechaNacimiento.dd>31||(!aux->fechaNacimiento.dd))||(aux->fechaNacimiento.dd<0)){
+	cin>>(*aux).fechaNacimiento.dd;
+	
+	while(aux->fechaNacimiento.dd>31||(aux->fechaNacimiento.dd<=0)){ //**********VALIDACION DE DIA DE NACIMIENTO************************
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
 		system("pause");
 		system("cls");
-		printf("\n\n\t\t\tIngrese el nombre: %s",aux->nombre);
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
 		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
 		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
-		scanf("%i",&(*aux).fechaNacimiento.dd);
+		cin>>(*aux).fechaNacimiento.dd;
 	}
+	
 	printf("\n\t\t\tIngrese el mes (mm) de nacimiento: ");
-	scanf("%i",&aux->fechaNacimiento.mm);
-	while((aux->fechaNacimiento.mm>12)||(aux->fechaNacimiento.mm==0)||(aux->fechaNacimiento.mm<0)){
+	cin>>(*aux).fechaNacimiento.mm;
+	
+	while((aux->fechaNacimiento.mm>12)||(aux->fechaNacimiento.mm<=0)){ //**********VALIDACION DEL MES DE NACIMIENTO************************
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
 		system("pause");
 		system("cls");
-		printf("\n\n\t\t\tIngrese el nombre: %s",aux->nombre);
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
 		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
 		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
 		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: ");
-		scanf("%i",&aux->fechaNacimiento.mm);
+		cin>>(*aux).fechaNacimiento.mm;
 	}
+	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
+	
+	freeBuffer();
+	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
+	gets(aux->place.ciudad);
+	
+	while(strlen(aux->place.ciudad)>40){                                //**********VALIDACION DE LA CIUDAD**********
+		system("cls");
+		printf("\n\n\t\t\t\tSolo se permiten max 40 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: %i",aux->fechaNacimiento.mm);
+		printf("\n\n\t\t\tIngrese el a%co (yyyy) de nacimiento: %i",164,aux->fechaNacimiento.yy);
+		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
+		gets(aux->place.ciudad);
+	}
+	
+	printf("\n\t\t\tIngrese la direccion (40 caracteres max): ");
+	gets(aux->place.direccion);
+	
+	while(strlen(aux->place.direccion)>40){                  //**********VALIDACION DE LA DIRECCION**********
+		system("cls");                                   
+		printf("\n\n\t\t\t\tSolo se permiten max 40 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: %i",aux->fechaNacimiento.mm);
+		printf("\n\n\t\t\tIngrese el a%co (yyyy) de nacimiento: %i",164,aux->fechaNacimiento.yy);
+		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): %s",aux->place.ciudad);
+		printf("\n\n\t\t\tIngrese la direccion (40 caracteres max): ");
+		gets(aux->place.direccion);
+	}
 	printf("\n\n\t\t\t     Desea guardar estos datos?");
 	printf("\n\t\t      Escriba (1) si desea cargar los datos: ");
 	scanf("%i",&num);
@@ -131,6 +208,7 @@ void agregarPersona(struct persona **p){
 		aux->personaProx= *p;
 		*p = aux;
 	}
+	freeBuffer();
 	system("cls");
 }
 
@@ -292,4 +370,3 @@ void menuOperacionesConsultas(){
 		}
 	}
 }
-
