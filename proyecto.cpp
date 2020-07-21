@@ -44,16 +44,18 @@ struct persona{
 	struct persona *personaProx;
 };
 
-struct persona *p = NULL;
-struct vehiculo *v = NULL;
-struct infraccion *i =NULL;
-
 void freeBuffer(){
 	char c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
 
+struct persona *p = NULL; 
+struct vehiculo *v = NULL; 
+struct infraccion *i =NULL;
+
 void encabezado();
+
+int validarCedula(struct persona *n, int x);
 
 void agregarPersona(struct persona **p);
 
@@ -69,7 +71,6 @@ void menuOperacionesConsultas();
 
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
-
 
 	int opcion = 1;	
 	while(opcion){ //   **************************MENU PRINCIPAL*************************
@@ -95,6 +96,13 @@ int main(){         //*************************FUNCION PRINCIPAL****************
 void encabezado(){
 		printf("\t\t\t\t\tMENU DE CONTROL DE MULTAS\n");
 		printf("\t\t\t\tALCALDIA DEL MUNICIPIO DE CHACAO, CARACAS\n\n");
+}
+
+int validarCedula(struct persona *n, int x){
+	if (n){
+			if (n->cedula == x) return 1; //Se encontro una cedula igual, es verdadero
+			else return validarCedula(n->personaProx, x);
+	}else return 0; //Es decir que no se encontró ninguna cedula igual, es falso
 }
 
 void agregarPersona(struct persona **p){
@@ -129,6 +137,17 @@ void agregarPersona(struct persona **p){
 	
 	printf("\n\t\t\tIngrese la cedula: ");
 	scanf("%li",&aux->cedula);
+	
+	while(validarCedula((*p), aux->cedula)){                   //*********************VALIDACION DE CEDULA***********************
+		system("cls");
+		printf("\n\n\t\t\t\tEsa cedula ya esta registrada en el sistema.\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tIngrese la cedula: ");
+		scanf("%li",&aux->cedula);
+	}
 	
 	printf("\n\t\t\tIngrese el dia (dd) de nacimiento: ");
 	cin>>(*aux).fechaNacimiento.dd;
