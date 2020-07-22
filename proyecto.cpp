@@ -5,68 +5,78 @@
 
 using namespace std;
 
-struct fecha{
-	int yy;
-	int mm;
-	int dd; 
+struct fecha{                                        //ESTRUCTURA FECHA
+	int yy;                                            //AÑO
+	int mm;                                            //MES
+	int dd;                                            //DIA
 };
 
-struct lugar{
-	char ciudad[80];
-	char direccion[80];
+struct lugar{                                        //ESTRUCTURA LUGAR
+	char ciudad[80];                                   //CIUDAD
+	char direccion[80];                                //DIRECCION
 };
 
-struct infraccion{
-	int numeroInfraccion;
-	struct fecha fechaInfraccion;
-	char tipoInfraccion[40];
-	int monto;
-	int pagado;
-	struct infraccion *infraccionProx;
+struct infraccion{                                   //ESTRUCTURA INFRACCION
+	int numeroInfraccion;                              //NUMERO DE INFRACCION
+	struct fecha fechaInfraccion;                      //FECHA DE INFRACCION
+	char tipoInfraccion[40];                           //TIPO DE INFRACCION
+	int monto;                                         //MONTO
+	int pagado;                                        //PAGADO
+	struct infraccion *infraccionProx;                 //APUNTADOR QUE VA A OTRAS INFRACCIONES
 };
 
-struct vehiculo{
-	char placa[10];
-	char marca[10];
-	char modelo[10];
-	struct fecha annio;
-	char color[10];
-	struct vehiculo *vehiculoProx;
-	struct infraccion * datosInfraccion;
+struct vehiculo{                                     //ESTRUCTURA FECHA
+	char placa[10];                                    //PLACA (UNICO)
+	char marca[10];                                    //MARCA
+	char modelo[10];                                   //MODELO
+	struct fecha annio;                                //AÑO DEL VEHICULO
+	char color[10];                                    //COLOR DEL VEHICULO
+	struct vehiculo *vehiculoProx;                     //APUNTADOR AL PROXIMO VEHICULO
+	struct infraccion * datosInfraccion;               //APUNTADOR A LAS INFRACCION DE ESTE VEHICULO
 };
 
-struct persona{
-	char nombre[40];
-	char apellidos[40];
-	long int cedula;
-	struct fecha fechaNacimiento;
-	struct lugar place;
-	struct persona *personaProx;
-	struct vehiculo *datosVehiculo;
+struct persona{                                      //ESTRUCTURA PERSONA
+	char nombre[40];                                   //NOMBRE
+	char apellidos[40];                                //APELLIDOS
+	long int cedula;                                   //CEDULA
+	struct fecha fechaNacimiento;                      //FECHA DE NACIMIENTO (ESTRUCTURA ANIDADA)
+	struct lugar place;                                //LUGAR (ESTRUCTURA ANIDADA)
+	struct persona *personaProx;                       //APUNTADOR A LA PROXIMA PERSONA
+	struct vehiculo *datosVehiculo;                    //APUNTADOR AL VEHICULO DE ESTA PERSONA
 };
 
-void freeBuffer(){
+void freeBuffer(){                                   //LIBERARA EL BUFFER DE BASURA
 	char c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
 
-struct persona *p = NULL; 
+struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DECLARA EN MAIN PARA PODER
+//													   DECLARARSE EN LAS FUNCIONES. APUNTA A LA PRIMERA PERSONA
 
-void encabezado();
+void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
 
-int validarCedula(struct persona *n, int x);
+int validarCedula(struct persona *n, int x);         //VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA
+//                                                    DEVUELVE CERO SI NO SE ENCUENTRA
 
-void agregarPersona(struct persona **p);
+struct vehiculo * agregarVehiculo();                 //DEVULEVE UN APUNTADOR DE TIPO VEHICULO (NODO)
 
-void menuPersonas();
+void agregarPersona(struct persona **p);             //AGREGAR UNA PERSONA AL SISTEMA
 
-void menuVehiculos();
+void menuPersonas();                                 //MENU DE PERSONAS
 
-void menuMantenimiento();
+struct persona * devPersona(struct persona *A, int pos); //DEVUELVE UN APUNTADOR DE TIPO PERSONA EN UNA POSICION DADA
 
-void menuConsultas();
+void llamadaAgregarVehiculo(struct persona **p);      //FUNCION PARA PODER AGREGAR OTRO VEHICULO A UNA CEDULA INGRESADA
 
-void menuOperacionesConsultas();
+void menuVehiculos();                                //MENU VEHICULOS
+
+void menuMantenimiento();                            //MENU MANTENIMIENTO. DOS ENTRADA (PERSONAS Y VEHICULOS)
+
+void menuOperaMultas();                              //MENU OPERACIONES CON MULTAS
+
+void menuConsultas();                                //MENU CONSULTAS
+
+void menuOperacionesConsultas();                     //MENU OPERACIONES Y CONSULTAS
 
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
@@ -82,9 +92,9 @@ int main(){         //*************************FUNCION PRINCIPAL****************
 		system("cls");
 		
 		switch (opcion){
-			case 1: menuMantenimiento();//LLAMADA A LA FUNCION menuMantenimiento
+			case 1: menuMantenimiento();             //LLAMADA A LA FUNCION menuMantenimiento
 				break;
-			case 2: menuOperacionesConsultas();//LLAMADA A LA FUNCION menuOperaciones
+			case 2: menuOperacionesConsultas();      //LLAMADA A LA FUNCION menuOperaciones
 				break;
 		}
 	}
@@ -92,15 +102,15 @@ int main(){         //*************************FUNCION PRINCIPAL****************
 }
 
 
-void encabezado(){
+void encabezado(){                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
 		printf("\t\t\t\t\tMENU DE CONTROL DE MULTAS\n");
 		printf("\t\t\t\tALCALDIA DEL MUNICIPIO DE CHACAO, CARACAS\n\n");
 }
 
-int validarCedula(struct persona *n, int x, int cont){ //Devuelve 1 si lo encuentra. Devuelve 0 si no.
+int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA. 0 SI NO
 	if (n){
-			if (n->cedula == x) return cont; //Se encontro una cedula igual, es verdadero
-			else return validarCedula(n->personaProx, x, ++cont);
+			if (n->cedula == x) return cont;//Se encontro una cedula igual, es verdadero
+			else return validarCedula(n->personaProx, x, ++cont); 
 	}else return 0; //Es decir que no se encontró ninguna cedula igual, es falso
 }
 
@@ -110,7 +120,7 @@ struct vehiculo * agregarVehiculo(){
 	struct vehiculo *auxVehiculo = new struct vehiculo;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
 	printf("\n\t\t\tIngrese la placa (8 caracteres max): "); 
 	gets(auxVehiculo->placa);
-	while(strlen(auxVehiculo->placa)>8){                                     //**********VALIDACION DEL NOMBRE*****************************
+	while(strlen(auxVehiculo->placa)>8){                                     //**********VALIDACION DE LA LONGITUD DE LA PLACA*****
 		printf("\n\n\t\t\t\tSolo se permiten max 8 caracteres\n\n");
 		system("pause");
 		system("cls");
