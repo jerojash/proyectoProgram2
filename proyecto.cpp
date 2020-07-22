@@ -26,9 +26,9 @@ struct infraccion{                                   //ESTRUCTURA INFRACCION
 };
 
 struct vehiculo{                                     //ESTRUCTURA FECHA
-	char placa[10];                                    //PLACA (UNICO)
-	char marca[10];                                    //MARCA
-	char modelo[10];                                   //MODELO
+	char placa[20];                                    //PLACA (UNICO)
+	char marca[20];                                    //MARCA
+	char modelo[20];                                   //MODELO
 	struct fecha annio;                                //AÑO DEL VEHICULO
 	char color[10];                                    //COLOR DEL VEHICULO
 	struct vehiculo *vehiculoProx;                     //APUNTADOR AL PROXIMO VEHICULO
@@ -55,7 +55,7 @@ struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DE
 
 void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
 
-int validarCedula(struct persona *n, int x);         //VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA
+int validarCedula(struct persona *n, int x, int cont);//VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA
 //                                                    DEVUELVE CERO SI NO SE ENCUENTRA
 
 struct vehiculo * agregarVehiculo();                 //DEVULEVE UN APUNTADOR DE TIPO VEHICULO (NODO)
@@ -78,6 +78,7 @@ void menuConsultas();                                //MENU CONSULTAS
 
 void menuOperacionesConsultas();                     //MENU OPERACIONES Y CONSULTAS
 
+void modificarPersona(struct persona **p);           //MODIFICAR LA INFORMACION DE UNA PERSONA CARGADA AL SISTEMA
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -133,6 +134,7 @@ struct vehiculo * agregarVehiculo(){
 	gets(auxVehiculo->modelo);
 	printf("\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&auxVehiculo->annio.yy);
+	freeBuffer();
 	printf("\n\t\t\tIngrese el color del vehiculo: "); 
 	gets(auxVehiculo->color);
 	
@@ -259,11 +261,12 @@ void agregarPersona(struct persona **p){
 	aux->datosVehiculo = NULL;
 	struct vehiculo *auxVehiculo;
 	printf("\n\n\t\t\tDesea agregar un vehiculo a este usuario?");
-	printf("\n\t\t\tEscriba (1) si desea subir los datos: ");
+	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
 	scanf("%i",&num);
 	if (num==1) {
 		auxVehiculo = agregarVehiculo();
 		auxVehiculo->vehiculoProx = aux->datosVehiculo;
+		aux->datosVehiculo = auxVehiculo;
 	}
 	while(num==1){
 		printf("\n\n\t\t\tDesea agregar otro vehiculo a este usuario?");
@@ -272,6 +275,7 @@ void agregarPersona(struct persona **p){
 		if (num==1){
 			auxVehiculo = agregarVehiculo();
 			auxVehiculo->vehiculoProx = aux->datosVehiculo;
+			aux->datosVehiculo = auxVehiculo;
 		}
 	}
 	printf("\n\n\t\t\tDesea guardar todos los datos?");
@@ -289,6 +293,7 @@ void menuPersonas(){
 	
 int opcion;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t\t MANTENIMIENTO->PERSONAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -303,7 +308,7 @@ int opcion;
 		switch (opcion){
 			case 1: agregarPersona(&p);//LLAMADA A LA FUNCION agregarPersona
 				break;
-			case 2: //LLAMADA A LA FUNCION modificarPersona
+			case 2: modificarPersona(&p);//LLAMADA A LA FUNCION modificarPersona
 				break;
 			case 3: //LLAMADA A LA FUNCION consultarPersona
 				break;
@@ -322,6 +327,7 @@ struct persona * devPersona(struct persona *A, int pos){
 void llamadaAgregarVehiculo(struct persona **p){
 	int cedula, posicion;
 	struct persona *auxPersona;
+	struct vehiculo *auxVehiculo;
 	if(!*p){
 		printf("\n\n\t\t\tNo existen usuarios ingresados al sistema. Por favor cargue uno\n\n");
 		system("pause");
@@ -344,15 +350,14 @@ void llamadaAgregarVehiculo(struct persona **p){
 	}if(!cedula) return;
 	system("cls");
 	//freeBuffer();
-	auxPersona = devPersona(*p,posicion);
+	auxPersona = devPersona(*p,--posicion);
 	
-	struct vehiculo *auxVehiculo = agregarVehiculo();
+	auxVehiculo = agregarVehiculo();
 	
 	printf("\n\n\t\t\t     Desea guardar estos datos?");
 	printf("\n\t\t      Escriba (1) si desea cargar los datos: ");
 	scanf("%i",&posicion);
 	if (posicion == 1){
-		
 		auxVehiculo->vehiculoProx = auxPersona->datosVehiculo;
 		auxPersona->datosVehiculo = auxVehiculo;
 		
@@ -360,10 +365,10 @@ void llamadaAgregarVehiculo(struct persona **p){
 }
 
 void menuVehiculos(){
-		int opcion=1;
-		encabezado();
+	system("cls");
+	int opcion=1;
 	while(opcion){
-
+		encabezado();
 		printf("\t\t\t\t\tMANTENIMIENTO->VEHICULOS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
 		printf("\t\t\t\t\t(1)--AGREGAR\n");
@@ -388,6 +393,7 @@ void menuVehiculos(){
 }	
 
 void menuMantenimiento(){
+	system("cls");
 	int opcion;
 	while(opcion){
 		encabezado();
@@ -411,7 +417,7 @@ void menuMantenimiento(){
 }
 
 void menuOperaMultas(){
-	
+	system("cls");
 	int opcion;
 	while(opcion){
 		encabezado();
@@ -440,6 +446,7 @@ void menuOperaMultas(){
 }
 
 void menuConsultas(){
+	system("cls");
 	int opcion;
 	while(opcion){
 		encabezado();
@@ -467,6 +474,7 @@ void menuConsultas(){
 }
 
 void menuOperacionesConsultas(){
+	system("cls");
 	int opcion;
 	while(opcion){
 		encabezado();
@@ -487,4 +495,146 @@ void menuOperacionesConsultas(){
 				break;
 		}
 	}
+}
+
+void modificarPersona(struct persona **p){
+	system("cls");
+	int cedula,posicion, respuesta=0;
+	struct persona *aux;
+	
+	if(!*p){ //VALIDO PARA SABER SI LA BASE DE DATOS ESTA VACIA
+		printf("\n\t\t\tLa base de datos esta vacia. Ingrese una persona al sistema para continuar\n");
+		system("pause");
+		return;
+	}
+	
+	while(respuesta!=1){
+		system("cls");
+		printf("\n\t\t\tIngrese una cedula para buscar en el sistema.");
+		printf("\n\t\t\t(0) Para salir\n\t\t\t");
+		scanf("%i",&cedula);
+		if (!cedula) return;
+		posicion=validarCedula(*p, cedula, 1);
+		
+		while(!posicion){
+			system("cls");
+			printf("\n\t\t\tLa cedula no se encuentra en el sistema, intente de nuevo: ");
+			system("pause");
+			system("cls");
+			printf("\n\t\t\tIngrese una cedula para buscar en el sistema.");
+			printf("\n\t\t\t(0) Para salir\n\t\t");
+			scanf("%i",&cedula);
+			if (!cedula) return;                         
+			posicion = validarCedula(*p,cedula,1);    //BUG
+		
+		}
+		aux = devPersona(*p, --posicion);		
+		printf("\n\n\t\t\tDesea modificar los datos de esta persona?\n\t\t\tIngrese 1 si desea hacerlo");
+		printf("\n\n\t\t\tNombre: %s   Apellido: %s",aux->nombre,aux->apellidos);
+		printf("\n\t\t\tCedula: %i\n\n\t\t\t\t\t\t",cedula);
+		scanf("%i",&respuesta);
+	}
+	freeBuffer();
+	
+	printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
+	gets(aux->nombre);
+	
+	while(strlen(aux->nombre)>20){                                     //******************VALIDACION DEL NOMBRE********************
+		printf("\n\n\t\t\t\tSolo se permiten max 20 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
+		gets(aux->nombre);
+	}
+	
+	printf("\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
+	gets(aux->apellidos);
+	
+	while(strlen(aux->apellidos)>20){                                //********************VALIDACION DEL APELLIDO*****************************
+		printf("\n\n\t\t\t\tSolo se permiten max 20 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
+		gets(aux->apellidos);
+	}
+	
+	printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);
+	
+	printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
+	cin>>(*aux).fechaNacimiento.dd;
+	
+	while(aux->fechaNacimiento.dd>31||(aux->fechaNacimiento.dd<=0)){ //**********VALIDACION DE DIA DE NACIMIENTO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
+		cin>>(*aux).fechaNacimiento.dd;
+	}
+	
+	printf("\n\t\t\tIngrese el mes (mm) de nacimiento: ");
+	cin>>(*aux).fechaNacimiento.mm;
+	
+	while((aux->fechaNacimiento.mm>12)||(aux->fechaNacimiento.mm<=0)){ //**********VALIDACION DEL MES DE NACIMIENTO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: ");
+		cin>>(*aux).fechaNacimiento.mm;
+	}
+	
+	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
+	scanf("%i",&aux->fechaNacimiento.yy);
+	
+	freeBuffer();
+	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
+	gets(aux->place.ciudad);
+	
+	while(strlen(aux->place.ciudad)>40){                                //**********VALIDACION DE LA CIUDAD**********
+		system("cls");
+		printf("\n\n\t\t\t\tSolo se permiten max 40 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: %i",aux->fechaNacimiento.mm);
+		printf("\n\n\t\t\tIngrese el a%co (yyyy) de nacimiento: %i",164,aux->fechaNacimiento.yy);
+		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
+		gets(aux->place.ciudad);
+	}
+	
+	printf("\n\t\t\tIngrese la direccion (40 caracteres max): ");
+	gets(aux->place.direccion);
+	
+	while(strlen(aux->place.direccion)>40){                  //**********VALIDACION DE LA DIRECCION**********
+		system("cls");                                   
+		printf("\n\n\t\t\t\tSolo se permiten max 40 caracteres\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: %i",aux->fechaNacimiento.mm);
+		printf("\n\n\t\t\tIngrese el a%co (yyyy) de nacimiento: %i",164,aux->fechaNacimiento.yy);
+		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): %s",aux->place.ciudad);
+		printf("\n\n\t\t\tIngrese la direccion (40 caracteres max): ");
+		gets(aux->place.direccion);
+	}
+	
+	printf("\n\n\t\t\t\tDATOS GUARDADOS CON EXITO\n");
+	system("pause");
+	freeBuffer();
+	system("cls");
 }
