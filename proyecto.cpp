@@ -3,7 +3,7 @@
 #include <string.h>
 
 struct fecha{                                        //ESTRUCTURA FECHA
-	int yy;                                            //AÃ‘O
+	int yy;                                            //AÑO
 	int mm;                                            //MES
 	int dd;                                            //DIA
 };
@@ -26,7 +26,7 @@ struct vehiculo{                                     //ESTRUCTURA FECHA
 	char placa[20];                                    //PLACA (UNICO)
 	char marca[20];                                    //MARCA
 	char modelo[20];                                   //MODELO
-	struct fecha annio;                                //AÃ‘O DEL VEHICULO
+	struct fecha annio;                                //AÑO DEL VEHICULO
 	char color[10];                                    //COLOR DEL VEHICULO
 	struct vehiculo *vehiculoProx;                     //APUNTADOR AL PROXIMO VEHICULO
 	struct infraccion * datosInfraccion;               //APUNTADOR A LAS INFRACCION DE ESTE VEHICULO
@@ -50,7 +50,7 @@ void freeBuffer(){                                   //LIBERARA EL BUFFER DE BAS
 struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DECLARA EN MAIN PARA PODER
 //													   DECLARARSE EN LAS FUNCIONES. APUNTA A LA PRIMERA PERSONA
 
-void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÃšS
+void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
 
 int validarCedula(struct persona *n, int x, int cont);//VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA
 //                                                    DEVUELVE CERO SI NO SE ENCUENTRA
@@ -79,9 +79,14 @@ void modificarPersona(struct persona **p);           //MODIFICAR LA INFORMACION 
 
 void menuConsultarPersona();
 
-void buscarPersonaName();
+void buscarPersonaName(struct persona *p, char name[20]);
 
 void consultarPersonaNombre(struct persona *p);
+
+void buscarPersonaID(struct persona *p, int id);
+
+void consultarPersonaCedula(struct persona *p);
+
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -106,15 +111,15 @@ int main(){         //*************************FUNCION PRINCIPAL****************
 }
 
 
-void encabezado(){                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÃšS
+void encabezado(){                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
 		printf("\t\t\t\t\tMENU DE CONTROL DE MULTAS\n");
 		printf("\t\t\t\tALCALDIA DEL MUNICIPIO DE CHACAO, CARACAS\n\n");
 }
 
-int validarCedula(struct persona *n, int x, int pos){
+int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA. 0 SI NO
 	if (n){
-			if (n->cedula == x) return pos; //Se encontro una cedula igual, es verdadero
-			else return validarCedula(n->personaProx, x,1);
+			if (n->cedula == x) return cont;//Se encontro una cedula igual, es verdadero
+			else return validarCedula(n->personaProx, x, ++cont); 
 	}else return 0; //Es decir que no se encontró ninguna cedula igual, es falso
 }
 
@@ -164,7 +169,7 @@ void agregarPersona(struct persona **p){
 		printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
 		gets(aux->nombre);
 	}
-	
+	strcpy(aux->nombre,strupr(aux->nombre));
 	printf("\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
 	gets(aux->apellidos);
 	
@@ -176,11 +181,12 @@ void agregarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
 		gets(aux->apellidos);
 	}
+	strcpy(aux->apellidos,strupr(aux->apellidos));
 	
 	printf("\n\t\t\tIngrese la cedula: ");
 	scanf("%li",&aux->cedula);
 	
-	while(validarCedula((*p), aux->cedula,1)||(aux->cedula<=0)){      //*****************VALIDACION DE CEDULA***********************
+	while((validarCedula((*p), aux->cedula, 1)!=0)||(aux->cedula<=0)){      //*****************VALIDACION DE CEDULA***********************
 		system("cls");
 		printf("\n\n\t\t\tEsa cedula ya esta registrada en el sistema o es una cedula invalida.\n\n");
 		system("pause");
@@ -284,6 +290,7 @@ void agregarPersona(struct persona **p){
 	}
 	printf("\n\n\t\t\tDesea guardar todos los datos?");
 	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
+	freeBuffer();
 	scanf("%i",&num);
 	if (num == 1){
 		aux->personaProx= *p;
@@ -369,9 +376,9 @@ void llamadaAgregarVehiculo(struct persona **p){
 }
 
 void menuVehiculos(){
-	system("cls");
 	int opcion=1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t\tMANTENIMIENTO->VEHICULOS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -518,7 +525,7 @@ void modificarPersona(struct persona **p){
 		printf("\n\t\t\t(0) Para salir\n\t\t\t");
 		scanf("%i",&cedula);
 		if (!cedula) return;
-		posicion=validarCedula(*p, cedula,1);
+		posicion=validarCedula(*p, cedula, 1);
 		
 		while(!posicion){
 			system("cls");
@@ -659,7 +666,7 @@ void menuConsultarPersona(){
 		switch (opcion){
 			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION agregarPersona
 				break;
-			case 2: //consultarPersonaCedula(p);//LLAMADA A LA FUNCION modificarPersona
+			case 2: consultarPersonaCedula(p);//consultarPersonaCedula(p);//LLAMADA A LA FUNCION modificarPersona
 				break;
 		}
 	}
@@ -673,10 +680,10 @@ void buscarPersonaName(struct persona *p, char name[20]){
 			printf("\n\n\t\t\tCedula: %i",p->cedula);
 			printf("\n\n\t\t\tFecha de nacimiento: %i/%i/%i",p->fechaNacimiento.dd,p->fechaNacimiento.mm,p->fechaNacimiento.yy);
 			printf("\n\n\t\t\tLugar de nacimiento: %s",p->place.ciudad);
-			printf("\n\n\t\t\tDireccion actual de residencia: %s",p->place.ciudad);
+			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.ciudad);
 			system("pause");
 		}
-		else buscarPersonaName(p->personaProx, name);
+		buscarPersonaName(p->personaProx, name);
 	}
 }
 
@@ -690,11 +697,43 @@ void consultarPersonaNombre(struct persona *p){
 		return;
 	}
 	printf("\n\n\t\t\tIngrese el nombre que desea buscar");
-	printf("\n\t\t\tDebe ser exactamente el mismo que se ingreso en el sistema");
+	printf("\n\t\t\tDebe ser el mismo que se ingreso en el sistema (No importan las mayusculas)\n\n\t\t\t\t\t");
 	gets(nombre);
+	strcpy(nombre,strupr(nombre));
+	printf("\n%s\n",nombre);
 	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n\n");
 	buscarPersonaName(p, nombre);
-	printf("\n\n\t\t\t\t    NO SE ENCONTRARON MAS DATOS");
+	printf("\n\n\t\t\t\t    NO SE ENCONTRARON MAS DATOS\n\n");
+	system("pause");
+	system("cls");
+}
+
+void buscarPersonaID(struct persona *p, int id){
+	if (p){
+		if(p->cedula == id){
+			printf("\n\n\t\t\tNombre: %s",p->nombre);
+			printf("\n\n\t\t\tApellidos: %s",p->apellidos);
+			printf("\n\n\t\t\tCedula: %i",p->cedula);
+			printf("\n\n\t\t\tFecha de nacimiento: %i/%i/%i",p->fechaNacimiento.dd,p->fechaNacimiento.mm,p->fechaNacimiento.yy);
+			printf("\n\n\t\t\tLugar de nacimiento: %s",p->place.ciudad);
+			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.ciudad);
+		}
+		else buscarPersonaID(p->personaProx, id);
+	} else printf("\n\n\t\t\t\tNO SE ENCONTRO ESA CEDULA EN EL SISTEMA\n\n");
+}
+
+void consultarPersonaCedula(struct persona *p){
+	system("cls");
+	int cedula = 0;
+	freeBuffer();
+	if(!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n");
+		system("pause");
+		return;
+	}
+	printf("\n\n\t\t\tIngrese la cedula que desea buscar\n\n\t\t\t\t\t");
+	scanf("%i",&cedula);
+	buscarPersonaID(p, cedula);
 	system("pause");
 	system("cls");
 }
