@@ -557,7 +557,7 @@ void modificarPersona(struct persona **p){
 		printf("\n\t\t\tIngrese el nombre (20 caracteres max): "); 
 		gets(aux->nombre);
 	}
-	
+	strcpy(aux->nombre,strupr(aux->nombre));
 	printf("\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
 	gets(aux->apellidos);
 	
@@ -569,7 +569,7 @@ void modificarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
 		gets(aux->apellidos);
 	}
-	
+	strcpy(aux->apellidos,strupr(aux->apellidos));
 	printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);
 	
 	printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
@@ -680,7 +680,7 @@ void buscarPersonaName(struct persona *p, char name[20]){
 			printf("\n\n\t\t\tCedula: %i",p->cedula);
 			printf("\n\n\t\t\tFecha de nacimiento: %i/%i/%i",p->fechaNacimiento.dd,p->fechaNacimiento.mm,p->fechaNacimiento.yy);
 			printf("\n\n\t\t\tLugar de nacimiento: %s",p->place.ciudad);
-			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.ciudad);
+			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.direccion);
 			system("pause");
 		}
 		buscarPersonaName(p->personaProx, name);
@@ -716,7 +716,7 @@ void buscarPersonaID(struct persona *p, int id){
 			printf("\n\n\t\t\tCedula: %i",p->cedula);
 			printf("\n\n\t\t\tFecha de nacimiento: %i/%i/%i",p->fechaNacimiento.dd,p->fechaNacimiento.mm,p->fechaNacimiento.yy);
 			printf("\n\n\t\t\tLugar de nacimiento: %s",p->place.ciudad);
-			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.ciudad);
+			printf("\n\n\t\t\tDireccion actual de residencia: %s\n\n",p->place.direccion);
 		}
 		else buscarPersonaID(p->personaProx, id);
 	} else printf("\n\n\t\t\t\tNO SE ENCONTRO ESA CEDULA EN EL SISTEMA\n\n");
