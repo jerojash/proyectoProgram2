@@ -14,9 +14,9 @@ struct lugar{                                        //ESTRUCTURA LUGAR
 };
 
 struct infraccion{                                   //ESTRUCTURA INFRACCION
-	int numeroInfraccion;                              //NUMERO DE INFRACCION
+	int numero;                              //NUMERO DE INFRACCION
 	struct fecha fechaInfraccion;                      //FECHA DE INFRACCION
-	char tipoInfraccion[40];                           //TIPO DE INFRACCION
+	char tipo[40];                           //TIPO DE INFRACCION
 	int monto;                                         //MONTO
 	char pagado[2];                                    //PAGADO
 	struct infraccion *infraccionProx;                 //APUNTADOR QUE VA A OTRAS INFRACCIONES
@@ -87,6 +87,9 @@ void buscarPersonaID(struct persona *p, int id);
 
 void consultarPersonaCedula(struct persona *p);
 
+struct infraccion * agregarInfraccion();
+
+int validarPlaca(struct persona *q, char placa[8]);
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -123,8 +126,41 @@ int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE
 	}else return 0; //Es decir que no se encontrÃ³ ninguna cedula igual, es falso
 }
 
-struct vehiculo * agregarVehiculo(){
+struct infraccion * agregarInfraccion(){
+	int num;
+	//freeBuffer();
+	struct infraccion *auxInfraccion = new struct infraccion;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
 
+	printf("\n\t\t\tIngrese el numero de infraccion: "); 
+	scanf("%i",&auxInfraccion->numero);
+
+	freeBuffer();
+	printf("\n\t\t\tIngrese el tipo de infraccion: "); 
+	gets(auxInfraccion->tipo);
+
+	//freeBuffer();
+	printf("\n\t\t\tIngrese el monto de la infraccion: "); 
+	scanf("%i",&auxInfraccion->monto);
+
+	printf("\n\t\t\tIngrese el dia en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.dd);
+
+	printf("\n\t\t\tIngrese el mes en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.mm);
+
+	printf("\n\t\t\tIngrese el año en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.yy);
+	
+	freeBuffer();
+	printf("\n\t\t\tIngrese si la multa ha sido pagada (SI/NO): "); 
+	gets(auxInfraccion->pagado);
+	
+	auxInfraccion->infraccionProx = NULL;
+	return auxInfraccion;
+}
+
+struct vehiculo * agregarVehiculo(){
+	int num;
 	freeBuffer();
 	struct vehiculo *auxVehiculo = new struct vehiculo;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
 	printf("\n\t\t\tIngrese la placa (8 caracteres max): "); 
@@ -148,6 +184,25 @@ struct vehiculo * agregarVehiculo(){
 	gets(auxVehiculo->color);
 	
 	auxVehiculo->datosInfraccion = NULL;
+	struct infraccion *auxInfraccion;
+	printf("\n\n\t\t\tDesea registrar una infraccion a este vehiculo?");
+	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
+	scanf("%i",&num);
+	if (num==1) {
+		auxInfraccion = agregarInfraccion();
+		auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
+		auxVehiculo->datosInfraccion = auxInfraccion;
+	}
+	while(num==1){
+		printf("\n\n\t\t\tDesea registrar otra infraccion a este vehiculo? ");
+		printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
+		scanf("%i",&num);
+		if (num==1) {
+			auxInfraccion = agregarInfraccion();
+			auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
+			auxVehiculo->datosInfraccion = auxInfraccion;
+		}
+	}
 	
 	return auxVehiculo;
 }
@@ -736,4 +791,15 @@ void consultarPersonaCedula(struct persona *p){
 	buscarPersonaID(p, cedula);
 	system("pause");
 	system("cls");
+}
+
+struct vehiculo *validarPlaca(struct persona *q, char placa[8], int cont){ //Retorna NULL si no consigue la placa.			   											   //sino, retorna el apuntador de esa placa
+	while(q){
+		struct vehiculo *vehiculo = q->datosVehiculo;
+		while(vehiculo){
+			if (!strcmp(vehiculo->placa, placa)) return vehiculo;
+			vehiculo = vehiculo->vehiculoProx;
+		}
+		q = q->personaProx;
+	} return NULL;
 }
