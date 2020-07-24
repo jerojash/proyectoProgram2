@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
+#include <string>
 
 struct fecha{                                        //ESTRUCTURA FECHA
 	int yy;                                            //AÃ‘O
@@ -14,9 +15,9 @@ struct lugar{                                        //ESTRUCTURA LUGAR
 };
 
 struct infraccion{                                   //ESTRUCTURA INFRACCION
-	int numeroInfraccion;                              //NUMERO DE INFRACCION
+	int numero;                              //NUMERO DE INFRACCION
 	struct fecha fechaInfraccion;                      //FECHA DE INFRACCION
-	char tipoInfraccion[40];                           //TIPO DE INFRACCION
+	char tipo[40];                           //TIPO DE INFRACCION
 	int monto;                                         //MONTO
 	char pagado[2];                                    //PAGADO
 	struct infraccion *infraccionProx;                 //APUNTADOR QUE VA A OTRAS INFRACCIONES
@@ -123,8 +124,81 @@ int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE
 	}else return 0; //Es decir que no se encontrÃ³ ninguna cedula igual, es falso
 }
 
-struct vehiculo * agregarVehiculo(){
+struct infraccion * agregarInfraccion(){
+	int num;
 
+	struct infraccion *auxInfraccion = new struct infraccion;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
+
+	printf("\n\t\t\tIngrese el numero de infraccion: "); 
+	scanf("%i",&auxInfraccion->numero);
+	
+	freeBuffer();
+	printf("\n\t\t\tIngrese el tipo de infraccion: "); 
+	gets(auxInfraccion->tipo);
+	strcpy(auxInfraccion->tipo,strupr(auxInfraccion->tipo));
+	
+	printf("\n\t\t\tIngrese el monto de la infraccion: "); 
+	scanf("%i",&auxInfraccion->monto);
+
+	printf("\n\t\t\tIngrese el dia en que se registro la infraccion: ");
+	scanf("%i",&(*auxInfraccion).fechaInfraccion.dd);
+	
+	while(auxInfraccion->fechaInfraccion.dd>31||(auxInfraccion->fechaInfraccion.dd<=0)){ //**********VALIDACION DE DIA DE REGISTRO DE INFRACCION************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion: %i",auxInfraccion->numero);
+		printf("\n\n\t\t\tIngrese el tipo de infraccion: %s",auxInfraccion->tipo);
+		printf("\n\n\t\t\tIngrese el monto de la infraccion: %i",auxInfraccion->monto);
+		printf("\n\n\t\t\tIngrese el dia en que se registro la infraccion: ");
+		scanf("%i",&(*auxInfraccion).fechaInfraccion.dd);
+	}
+	
+	printf("\n\t\t\tIngrese el mes en que se registro la infraccion: "); 
+	scanf("%i",&(*auxInfraccion).fechaInfraccion.mm);
+	
+	while((auxInfraccion->fechaInfraccion.mm>12)||(auxInfraccion->fechaInfraccion.mm<=0)){ //**********VALIDACION DEL MES DE REGISTRO INFRACCION************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion: %i",auxInfraccion->numero);
+		printf("\n\n\t\t\tIngrese el tipo de infraccion: %s",auxInfraccion->tipo);
+		printf("\n\n\t\t\tIngrese el monto de la infraccion: %i",auxInfraccion->monto);
+		printf("\n\n\t\t\tIngrese el dia en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.dd);
+		printf("\n\n\t\t\tIngrese el mes en que se registro la infraccion: ");
+		scanf("%i",&(*auxInfraccion).fechaInfraccion.mm);
+	}
+
+	printf("\n\t\t\tIngrese el año en que se registro la infraccion: "); 
+	scanf("%i",&(*auxInfraccion).fechaInfraccion.yy);
+	freeBuffer();
+	printf("\n\t\t\tIngrese si la multa ha sido pagada (SI/NO): "); 
+	gets(auxInfraccion->pagado);
+	strcpy(auxInfraccion->pagado,strupr(auxInfraccion->pagado));
+	
+	while ((strcmp(auxInfraccion->pagado,"SI")!=0)||(strcmp(auxInfraccion->pagado,"NO")!=0)){   //******************VALIDACION SI PAGO MULTA O NO********************
+		printf("\n\n\t\t\t\tLa respuesta introducida no es valida\n\n");
+		printf("\n\n\t\t\t\tSolo se permiten las siguientes respuestas: 'SI' o 'NO'\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion: %i",auxInfraccion->numero);
+		printf("\n\n\t\t\tIngrese el tipo de infraccion: %s",auxInfraccion->tipo);
+		printf("\n\n\t\t\tIngrese el monto de la infraccion: %i",auxInfraccion->monto);
+		printf("\n\n\t\t\tIngrese el dia en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.dd);
+		printf("\n\n\t\t\tIngrese el mes en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.mm);
+		printf("\n\n\t\t\tIngrese el año en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.yy);
+		printf("\n\n\t\t\tIngrese si la multa ha sido pagada (SI/NO): "); 
+		gets(auxInfraccion->pagado);
+	}
+	
+	auxInfraccion->infraccionProx = NULL;
+	return auxInfraccion;
+}
+
+struct vehiculo * agregarVehiculo(){
+	int num;
 	freeBuffer();
 	struct vehiculo *auxVehiculo = new struct vehiculo;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
 	printf("\n\t\t\tIngrese la placa (8 caracteres max): "); 
@@ -139,15 +213,37 @@ struct vehiculo * agregarVehiculo(){
 	}
 	printf("\n\t\t\tIngrese la marca del vehiculo: "); 
 	gets(auxVehiculo->marca);
+	strcpy(auxVehiculo->marca,strupr(auxVehiculo->marca));
 	printf("\n\t\t\tIngrese el modelo del vehiculo: "); 
 	gets(auxVehiculo->modelo);
+	strcpy(auxVehiculo->modelo,strupr(auxVehiculo->modelo));
 	printf("\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&auxVehiculo->annio.yy);
 	freeBuffer();
 	printf("\n\t\t\tIngrese el color del vehiculo: "); 
 	gets(auxVehiculo->color);
+	strcpy(auxVehiculo->color,strupr(auxVehiculo->color));
 	
 	auxVehiculo->datosInfraccion = NULL;
+	struct infraccion *auxInfraccion;
+	printf("\n\n\t\t\tDesea registrar una infraccion a este vehiculo?");
+	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
+	scanf("%i",&num);
+	if (num==1) {
+		auxInfraccion = agregarInfraccion();
+		auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
+		auxVehiculo->datosInfraccion = auxInfraccion;
+	}
+	while(num==1){
+		printf("\n\n\t\t\tDesea registrar otra infraccion a este vehiculo? ");
+		printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
+		scanf("%i",&num);
+		if (num==1) {
+			auxInfraccion = agregarInfraccion();
+			auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
+			auxVehiculo->datosInfraccion = auxInfraccion;
+		}
+	}
 	
 	return auxVehiculo;
 }
@@ -170,6 +266,7 @@ void agregarPersona(struct persona **p){
 		gets(aux->nombre);
 	}
 	strcpy(aux->nombre,strupr(aux->nombre));
+	
 	printf("\n\t\t\tIngrese los apellidos (20 caracteres max): "); 
 	gets(aux->apellidos);
 	
@@ -249,6 +346,7 @@ void agregarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
 		gets(aux->place.ciudad);
 	}
+	strcpy(aux->place.ciudad,strupr(aux->place.ciudad));
 	
 	printf("\n\t\t\tIngrese la direccion de vivienda (40 caracteres max): ");
 	gets(aux->place.direccion);
@@ -268,6 +366,8 @@ void agregarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese la direccion (40 caracteres max): ");
 		gets(aux->place.direccion);
 	}
+	strcpy(aux->place.direccion,strupr(aux->place.direccion));
+	
 	aux->datosVehiculo = NULL;
 	struct vehiculo *auxVehiculo;
 	printf("\n\n\t\t\tDesea agregar un vehiculo a este usuario?");
@@ -624,6 +724,7 @@ void modificarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
 		gets(aux->place.ciudad);
 	}
+	strcpy(aux->place.ciudad,strupr(aux->place.ciudad));
 	
 	printf("\n\t\t\tIngrese la direccion (40 caracteres max): ");
 	gets(aux->place.direccion);
@@ -643,6 +744,7 @@ void modificarPersona(struct persona **p){
 		printf("\n\n\t\t\tIngrese la direccion (40 caracteres max): ");
 		gets(aux->place.direccion);
 	}
+	strcpy(aux->place.direccion,strupr(aux->place.direccion));
 	
 	printf("\n\n\t\t\t\tDATOS GUARDADOS CON EXITO\n");
 	system("pause");
