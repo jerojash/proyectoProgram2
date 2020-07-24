@@ -3,7 +3,7 @@
 #include <string.h>
 
 struct fecha{                                        //ESTRUCTURA FECHA
-	int yy;                                            //AÑO
+	int yy;                                            //AÃ‘O
 	int mm;                                            //MES
 	int dd;                                            //DIA
 };
@@ -26,7 +26,7 @@ struct vehiculo{                                     //ESTRUCTURA FECHA
 	char placa[20];                                    //PLACA (UNICO)
 	char marca[20];                                    //MARCA
 	char modelo[20];                                   //MODELO
-	struct fecha annio;                                //AÑO DEL VEHICULO
+	struct fecha annio;                                //AÃ‘O DEL VEHICULO
 	char color[10];                                    //COLOR DEL VEHICULO
 	struct vehiculo *vehiculoProx;                     //APUNTADOR AL PROXIMO VEHICULO
 	struct infraccion * datosInfraccion;               //APUNTADOR A LAS INFRACCION DE ESTE VEHICULO
@@ -50,7 +50,7 @@ void freeBuffer(){                                   //LIBERARA EL BUFFER DE BAS
 struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DECLARA EN MAIN PARA PODER
 //													   DECLARARSE EN LAS FUNCIONES. APUNTA A LA PRIMERA PERSONA
 
-void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
+void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÃšS
 
 int validarCedula(struct persona *n, int x, int cont);//VALIDAR CEDULA, DEVUELVE EN QUE POSICION SE ENCUENTRA LA CEDULA
 //                                                    DEVUELVE CERO SI NO SE ENCUENTRA
@@ -111,7 +111,7 @@ int main(){         //*************************FUNCION PRINCIPAL****************
 }
 
 
-void encabezado(){                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
+void encabezado(){                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÃšS
 		printf("\t\t\t\t\tMENU DE CONTROL DE MULTAS\n");
 		printf("\t\t\t\tALCALDIA DEL MUNICIPIO DE CHACAO, CARACAS\n\n");
 }
@@ -120,7 +120,7 @@ int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE
 	if (n){
 			if (n->cedula == x) return cont;//Se encontro una cedula igual, es verdadero
 			else return validarCedula(n->personaProx, x, ++cont); 
-	}else return 0; //Es decir que no se encontró ninguna cedula igual, es falso
+	}else return 0; //Es decir que no se encontrÃ³ ninguna cedula igual, es falso
 }
 
 struct vehiculo * agregarVehiculo(){
@@ -302,7 +302,7 @@ void agregarPersona(struct persona **p){
 
 void menuPersonas(){
 	
-	int opcion;
+	int opcion = 1;
 	while(opcion){
 		system("cls");
 		encabezado();
@@ -405,7 +405,7 @@ void menuVehiculos(){
 
 void menuMantenimiento(){
 	system("cls");
-	int opcion;
+	int opcion=1;
 	while(opcion){
 		encabezado();
 		printf("\t\t\t\t\t      MANTENIMIENTO\n\n");
@@ -429,7 +429,7 @@ void menuMantenimiento(){
 
 void menuOperaMultas(){
 	system("cls");
-	int opcion;
+	int opcion = 1;
 	while(opcion){
 		encabezado();
 		printf("\t\t\t     OPERACIONES Y CONSULTAS->OPERACIONES CON MULTAS\n\n");
@@ -458,7 +458,7 @@ void menuOperaMultas(){
 
 void menuConsultas(){
 	system("cls");
-	int opcion;
+	int opcion = 1;
 	while(opcion){
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
@@ -486,7 +486,7 @@ void menuConsultas(){
 
 void menuOperacionesConsultas(){
 	system("cls");
-	int opcion;
+	int opcion= 1;
 	while(opcion){
 		encabezado();
 		printf("\t\t\t\t\t  OPERACIONES Y CONSULTAS\n\n");
@@ -651,7 +651,7 @@ void modificarPersona(struct persona **p){
 }
 
 void menuConsultarPersona(){
-	int opcion;
+	int opcion = 1;
 	while(opcion){
 		system("cls");
 		encabezado();
