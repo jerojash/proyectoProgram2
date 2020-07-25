@@ -88,6 +88,9 @@ void buscarPersonaID(struct persona *p, int id);
 
 void consultarPersonaCedula(struct persona *p);
 
+struct infraccion * agregarInfraccion();
+
+int validarPlaca(struct persona *q, char placa[8]);
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -126,11 +129,16 @@ int validarCedula(struct persona *n, int x, int cont){//VALIDAR CEDULA, DEVUELVE
 
 struct infraccion * agregarInfraccion(){
 	int num;
+<<<<<<< HEAD
 
+=======
+	//freeBuffer();
+>>>>>>> master
 	struct infraccion *auxInfraccion = new struct infraccion;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
 
 	printf("\n\t\t\tIngrese el numero de infraccion: "); 
 	scanf("%i",&auxInfraccion->numero);
+<<<<<<< HEAD
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese el tipo de infraccion: "); 
@@ -197,6 +205,34 @@ struct infraccion * agregarInfraccion(){
 	return auxInfraccion;
 }
 
+=======
+
+	freeBuffer();
+	printf("\n\t\t\tIngrese el tipo de infraccion: "); 
+	gets(auxInfraccion->tipo);
+
+	//freeBuffer();
+	printf("\n\t\t\tIngrese el monto de la infraccion: "); 
+	scanf("%i",&auxInfraccion->monto);
+
+	printf("\n\t\t\tIngrese el dia en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.dd);
+
+	printf("\n\t\t\tIngrese el mes en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.mm);
+
+	printf("\n\t\t\tIngrese el año en que se registro la infraccion: "); 
+	scanf("%i",&auxInfraccion->fechaInfraccion.yy);
+	
+	freeBuffer();
+	printf("\n\t\t\tIngrese si la multa ha sido pagada (SI/NO): "); 
+	gets(auxInfraccion->pagado);
+	
+	auxInfraccion->infraccionProx = NULL;
+	return auxInfraccion;
+}
+
+>>>>>>> master
 struct vehiculo * agregarVehiculo(){
 	int num;
 	freeBuffer();
@@ -838,4 +874,15 @@ void consultarPersonaCedula(struct persona *p){
 	buscarPersonaID(p, cedula);
 	system("pause");
 	system("cls");
+}
+
+struct vehiculo *validarPlaca(struct persona *q, char placa[8], int cont){ //Retorna NULL si no consigue la placa.			   											   //sino, retorna el apuntador de esa placa
+	while(q){
+		struct vehiculo *vehiculo = q->datosVehiculo;
+		while(vehiculo){
+			if (!strcmp(vehiculo->placa, placa)) return vehiculo;
+			vehiculo = vehiculo->vehiculoProx;
+		}
+		q = q->personaProx;
+	} return NULL;
 }
