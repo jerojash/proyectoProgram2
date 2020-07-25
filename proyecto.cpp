@@ -407,7 +407,7 @@ struct infraccion * agregarInfraccion(){
 	gets(auxInfraccion->pagado);
 	strcpy(auxInfraccion->pagado,strupr(auxInfraccion->pagado));
 	
-	while ((strcmp(auxInfraccion->pagado,"SI")!=0)||(strcmp(auxInfraccion->pagado,"NO")!=0)){   //******************VALIDACION SI PAGO MULTA O NO********************
+	while ((strcmp(auxInfraccion->pagado,"SI")!=0)&&(strcmp(auxInfraccion->pagado,"NO")!=0)){   //******************VALIDACION SI PAGO MULTA O NO********************
 		printf("\n\n\t\t\t\tLa respuesta introducida no es valida\n\n");
 		printf("\n\n\t\t\t\tSolo se permiten las siguientes respuestas: 'SI' o 'NO'\n\n");
 		system("pause");
@@ -549,7 +549,7 @@ void agregarPersona(struct persona **p){
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
-	validarAnnio(&aux);
+	validarAnnio(&aux);                     //**********VALIDACION DEL AÑO DE NACIMIENTO************************
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -737,7 +737,7 @@ void modificarPersona(struct persona **p){
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
-	validarAnnio(&aux);
+	validarAnnio(&aux);                     //**********VALIDACION DEL AÑO DE NACIMIENTO************************
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -790,7 +790,7 @@ void modificarPersona(struct persona **p){
 ///////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
 
 
-struct vehiculo *buscarPlaca(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   											   //sino, retorna el apuntador de esa placa
+struct vehiculo *buscarPlaca(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   	   //sino, retorna el apuntador de esa placa
 	while(q){
 		struct vehiculo *vehiculo = q->datosVehiculo;
 		while(vehiculo){
@@ -909,7 +909,7 @@ void consultarPersonaNombre(struct persona *p){
 	system("cls");
 }
 
-struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si no consigue la cedula.			   											   //sino, retorna el apuntador de esa placa
+struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si no consigue la cedula.		  //sino, retorna el apuntador de esa placa
 	while(r){
 		if(r->cedula == cedula) return r;
 		r = r->personaProx;
@@ -982,7 +982,7 @@ void validarMes(struct persona **t){
 }
 
 void validarAnnio(struct persona **t){
-	while(((*t)->fechaNacimiento.yy>2020)||((*t)->fechaNacimiento.yy<1)){                 //**********VALIDACION DEL AÑO DE NACIMIENTO************************
+	while(((*t)->fechaNacimiento.yy>2020)||((*t)->fechaNacimiento.yy<1)){ //**********VALIDACION DEL AÑO DE NACIMIENTO************************
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
 		system("pause");
