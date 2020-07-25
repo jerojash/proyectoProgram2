@@ -53,6 +53,12 @@ struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DE
 
 void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENﾃ售
 
+void validarDia(struct persona **t);                   //VALIDA EL DIA DE NACIMIENTO
+
+void validarMes(struct persona **t);                  //VALIDA EL MES DE NACIMIENTO
+
+void validarAnnio(struct persona **t);                //VALIDA EL Aﾃ前 DE NACIMIENTO
+
 struct vehiculo * agregarVehiculo();                 //DEVULEVE UN APUNTADOR DE TIPO VEHICULO (NODO)
 
 void agregarPersona(struct persona **p);             //AGREGAR UNA PERSONA AL SISTEMA
@@ -381,6 +387,21 @@ struct infraccion * agregarInfraccion(){
 
 	printf("\n\t\t\tIngrese el a en que se registro la infraccion: "); 
 	scanf("%i",&(*auxInfraccion).fechaInfraccion.yy);
+	
+	while((auxInfraccion->fechaInfraccion.yy>2020)||(auxInfraccion->fechaInfraccion.yy<1)){  //**********VALIDACION DEL Aﾃ前 DE REGISTRO INFRACCION****************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion: %i",auxInfraccion->numero);
+		printf("\n\n\t\t\tIngrese el tipo de infraccion: %s",auxInfraccion->tipo);
+		printf("\n\n\t\t\tIngrese el monto de la infraccion: %i",auxInfraccion->monto);
+		printf("\n\n\t\t\tIngrese el dia en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.dd);
+		printf("\n\n\t\t\tIngrese el mes en que se registro la infraccion: %i",auxInfraccion->fechaInfraccion.mm);
+		printf("\n\t\t\tIngrese el a en que se registro la infraccion: ");
+		scanf("%i",&(*auxInfraccion).fechaInfraccion.yy);
+	}
+	
 	freeBuffer();
 	printf("\n\t\t\tIngrese si la multa ha sido pagada (SI/NO): "); 
 	gets(auxInfraccion->pagado);
@@ -423,11 +444,26 @@ struct vehiculo * agregarVehiculo(){
 	printf("\n\t\t\tIngrese la marca del vehiculo: "); 
 	gets(auxVehiculo->marca);
 	strcpy(auxVehiculo->marca,strupr(auxVehiculo->marca));
+	
 	printf("\n\t\t\tIngrese el modelo del vehiculo: "); 
 	gets(auxVehiculo->modelo);
 	strcpy(auxVehiculo->modelo,strupr(auxVehiculo->modelo));
+	
 	printf("\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&auxVehiculo->annio.yy);
+	
+	while((auxVehiculo->annio.yy>2020)||(auxVehiculo->annio.yy<1)){               //**********VALIDACION DEL Aﾃ前 DEL MODELO VEHICULO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\n\t\t\tIngrese la placa: %s",auxVehiculo->placa);
+		printf("\n\n\t\t\tIngrese la marca del vehiculo: %s",auxVehiculo->marca);
+		printf("\n\n\t\t\tIngrese el modelo del vehiculo: %s",auxVehiculo->modelo);
+		printf("\n\t\t\tIngrese el a%co (yyyy): ",164); 
+		scanf("%i",&auxVehiculo->annio.yy);
+	}
+		
 	freeBuffer();
 	printf("\n\t\t\tIngrese el color del vehiculo: "); 
 	gets(auxVehiculo->color);
@@ -505,37 +541,15 @@ void agregarPersona(struct persona **p){
 	
 	printf("\n\t\t\tIngrese el dia de nacimiento: ");
 	scanf("%i",&(*aux).fechaNacimiento.dd);
-	
-	while(aux->fechaNacimiento.dd>31||(aux->fechaNacimiento.dd<=0)){ //**********VALIDACION DE DIA DE NACIMIENTO************************
-		system("cls");
-		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
-		system("pause");
-		system("cls");
-		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
-		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
-		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
-		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
-		scanf("%i",&(*aux).fechaNacimiento.dd);
-	}
+	validarDia(&aux);                       //**********VALIDACION DE DIA DE NACIMIENTO************************
 	
 	printf("\n\t\t\tIngrese el mes de nacimiento: ");
 	scanf("%i",&(*aux).fechaNacimiento.mm);
-	
-	while((aux->fechaNacimiento.mm>12)||(aux->fechaNacimiento.mm<=0)){ //**********VALIDACION DEL MES DE NACIMIENTO************************
-		system("cls");
-		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
-		system("pause");
-		system("cls");
-		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
-		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
-		printf("\n\n\t\t\tIngrese la cedula: %li",aux->cedula);	
-		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
-		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: ");
-		scanf("%i",&(*aux).fechaNacimiento.mm);
-	}
+	validarMes(&aux);                       //**********VALIDACION DEL MES DE NACIMIENTO************************
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
+	validarAnnio(&aux);
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -713,39 +727,17 @@ void modificarPersona(struct persona **p){
 	strcpy(aux->apellidos,strupr(aux->apellidos));
 	printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);
 	
-	printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
+	printf("\n\t\t\tIngrese el dia de nacimiento: ");
 	scanf("%i",&(*aux).fechaNacimiento.dd);
+	validarDia(&aux);                       //**********VALIDACION DE DIA DE NACIMIENTO************************
 	
-	while(aux->fechaNacimiento.dd>31||(aux->fechaNacimiento.dd<=0)){ //**********VALIDACION DE DIA DE NACIMIENTO************************
-		system("cls");
-		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
-		system("pause");
-		system("cls");
-		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
-		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
-		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
-		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
-		scanf("%i",&(*aux).fechaNacimiento.dd);
-	}
-	
-	printf("\n\t\t\tIngrese el mes (mm) de nacimiento: ");
+	printf("\n\t\t\tIngrese el mes de nacimiento: ");
 	scanf("%i",&(*aux).fechaNacimiento.mm);
-	
-	while((aux->fechaNacimiento.mm>12)||(aux->fechaNacimiento.mm<=0)){ //**********VALIDACION DEL MES DE NACIMIENTO************************
-		system("cls");
-		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
-		system("pause");
-		system("cls");
-		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",aux->nombre);
-		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",aux->apellidos);
-		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",aux->cedula);	
-		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",aux->fechaNacimiento.dd);
-		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: ");
-		scanf("%i",&(*aux).fechaNacimiento.mm);
-	}
+	validarMes(&aux);                       //**********VALIDACION DEL MES DE NACIMIENTO************************
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
+	validarAnnio(&aux);
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -958,3 +950,49 @@ void consultarPersonaCedula(struct persona *p){
 }
 
 ///////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////FUNCIONES VALIDAR///////////////////////////////////////////////////////////////
+void validarDia(struct persona **t){
+	while((*t)->fechaNacimiento.dd>31||((*t)->fechaNacimiento.dd<=0)){ //**********VALIDACION DE DIA DE NACIMIENTO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-31)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",(*t)->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",(*t)->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",(*t)->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: ");
+		scanf("%i",&(*t)->fechaNacimiento.dd);
+	}
+}
+
+void validarMes(struct persona **t){
+	while(((*t)->fechaNacimiento.mm>12)||((*t)->fechaNacimiento.mm<=0)){ //**********VALIDACION DEL MES DE NACIMIENTO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (1-12)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",(*t)->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",(*t)->apellidos);
+		printf("\n\n\t\t\tCedula: %i (NO SE PUEDE MODIFICAR)",(*t)->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",(*t)->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: ");
+		scanf("%i",&(*t)->fechaNacimiento.mm);
+	}
+}
+
+void validarAnnio(struct persona **t){
+	while(((*t)->fechaNacimiento.yy>2020)||((*t)->fechaNacimiento.yy<1)){                 //**********VALIDACION DEL Aﾃ前 DE NACIMIENTO************************
+		system("cls");
+		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
+		system("pause");
+		system("cls");
+		printf("\n\t\t\tIngrese el nombre (20 caracteres max): %s",(*t)->nombre);
+		printf("\n\n\t\t\tIngrese los apellidos (20 caracteres max): %s",(*t)->apellidos);
+		printf("\n\n\t\t\tIngrese la cedula: %li",(*t)->cedula);	
+		printf("\n\n\t\t\tIngrese el dia (dd) de nacimiento: %i",(*t)->fechaNacimiento.dd);
+		printf("\n\n\t\t\tIngrese el mes (mm) de nacimiento: %i",(*t)->fechaNacimiento.mm);
+		printf("\n\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
+		scanf("%i",&(*t)->fechaNacimiento.yy);
+	}
+}
