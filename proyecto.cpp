@@ -111,6 +111,8 @@ struct persona *buscarTitularVehiculo(struct persona *q, char placa[8]);
 
 void modificarVehiculo(struct persona **p);
 
+void llamadaEliminarVehiculo();
+
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -193,7 +195,7 @@ void menuVehiculos(){
 				break;
 			case 3: menuConsultarVehiculo();//LLAMADA A LA FUNCION consultarVehiculo
 				break;
-			case 4: //LLAMADA A LA FUNCION borrarVehiculo
+			case 4: llamadaEliminarVehiculo();//LLAMADA A LA FUNCION eliminarVehiculo
 				break;
 		}
 	}
@@ -960,6 +962,10 @@ void consultarVehiculoCedula(struct persona *r){
 	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n");
 	printf("\n\t\t\t\tPROPIETARIO: %s %s",auxPersona->nombre,auxPersona->apellidos);
 	printf("\n\t\t\t\tCEDULA: %i",auxPersona->cedula);
+	if(!auxVehiculo){
+	printf("\n\n\t\t\t     ESTE USUARIO NO TIENE VEHICULOS AGREGADOS\n\n");
+	system("pause");
+	}
 	for (int cont = 1; auxVehiculo; cont++){
 		printf("\n\n\t\t\t\tVehiculo %i",cont);
 		printf("\n\n\t\t\tPlaca: %s",auxVehiculo->placa);
@@ -1197,4 +1203,45 @@ void llamadaEliminarPersona(){
 	system("pause");
 }
 
+void llamadaEliminarVehiculo(){
+	system("cls");
+	freeBuffer();
+	int respuesta=0;
+	char placa[8];
+	if(!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	struct persona *persona = NULL;
+	struct vehiculo *vehiculo = NULL;
+	while((!vehiculo)||(respuesta!=1)){
+		system("cls");
+		printf("\n\n\t\t\tIngrese la placa de la persona que desea eliminar");
+		printf("\n\n\t\t\t(0) Para salir \n\n\t\t\t\t\t");
+		gets(placa);
+		strcpy(placa,strupr(placa));
+		if (!strcmp(placa,"0")) return;
+		vehiculo = buscarPlaca(p, placa);
+		if(!vehiculo){
+			system("cls");
+			printf("\n\n\t\t\t\tLA PLACA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}else{
+			persona = buscarTitularVehiculo(p, placa);
+			printf("\n\n\t\t\tDesea eliminar este vehiculo del sistema?\n\t\t\tIngrese 1 si desea hacerlo");
+			printf("\n\n\t\t\tPropietario: %s %s",persona->nombre,persona->apellidos);
+			printf("\n\n\t\t\tCedula: %i",persona->cedula);
+			printf("\n\n\t\t\t  Placa: %s",vehiculo->placa);
+			printf("\n\n\t\t\t  Marca: %s",vehiculo->marca);
+			printf("\n\n\t\t\t  Modelo: %s",vehiculo->modelo);
+			printf("\n\n\t\t\t  Color: %s",vehiculo->color);
+			printf("\n\n\t\t\t  A%co: %i\n\n\t\t\t\t\t\t",164,vehiculo->annio.yy);
+			scanf("%i",&respuesta);
+		}
+	}
+	eliminarVehiculo(&persona, &vehiculo,vehiculo->placa);
+	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
+	system("pause");
+}
 ///////////////////////////////////////////////////////////FUNCIONES ELIMINAR///////////////////////////////////////////////////////////////
