@@ -99,6 +99,17 @@ void buscarPersonaNombre(struct persona *p, char name[20]);
 
 void consultarVehiculoCedula(struct persona *r);
 
+void llamadaEliminarPersona();
+
+void eliminarPersona(struct persona **p, int cedula);
+
+void eliminarVehiculo(struct persona **p, struct vehiculo **v, char placa[8]);
+
+void eliminarInfraccion(struct vehiculo **v, struct infraccion **f, int numeroInfraccion);
+
+struct persona *buscarTitularVehiculo(struct persona *q, char placa[8]);
+
+
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
 	int opcion = 1;	
@@ -151,7 +162,7 @@ void menuPersonas(){
 				break;
 			case 3: menuConsultarPersona();//LLAMADA A LA FUNCION menuConsultarPersona
 				break;
-			case 4: //LLAMADA A LA FUNCION borrarPersona
+			case 4: llamadaEliminarPersona();//LLAMADA A LA FUNCION llamadaEliminarPersona
 
 				break;
 		}
@@ -435,11 +446,13 @@ struct vehiculo * agregarVehiculo(){
 	
 	strcpy(auxVehiculo->placa,strupr(auxVehiculo->placa));  //CONVIERTO LA PLACA EN PURAS MAYUSCULAS
 	while((strlen(auxVehiculo->placa)>8)||buscarPlaca(p, auxVehiculo->placa)){                                     //**********VALIDACION DE LA LONGITUD DE LA PLACA*****
-		printf("\n\n\t\t\t\tLa placa ya esta registrada en el sistema o ingreso una placa invalida\n\n");
-		system("pause");
+		if (buscarPlaca(p, auxVehiculo->placa)) printf("\n\n\t\t\t\tLa placa ya esta registrada en el sistema\n\n");
+		else printf("\n\n\t\t\t\tIngreso una placa invalida (MAX 8 CARACTERES)\n\n");
+		system("pause"); 
 		system("cls");
 		printf("\n\t\t\tIngrese la placa (8 caracteres max): "); 
 		gets(auxVehiculo->placa);
+		strcpy(auxVehiculo->placa,strupr(auxVehiculo->placa));  //CONVIERTO LA PLACA EN PURAS MAYUSCULAS
 	}
 	printf("\n\t\t\tIngrese la marca del vehiculo: "); 
 	gets(auxVehiculo->marca);
@@ -789,6 +802,16 @@ void modificarPersona(struct persona **p){
 
 ///////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
 
+struct persona *buscarTitularVehiculo(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   	   //sino, retorna el apuntador de esa placa
+	while(q){
+		struct vehiculo *vehiculo = q->datosVehiculo;
+		while(vehiculo){
+			if (!strcmp(vehiculo->placa, placa)) return q;
+			vehiculo = vehiculo->vehiculoProx;
+		}
+		q = q->personaProx;
+	} return NULL;
+}
 
 struct vehiculo *buscarPlaca(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   	   //sino, retorna el apuntador de esa placa
 	while(q){
@@ -825,7 +848,10 @@ void consultarVehiculoPlaca(struct persona *r){
 			system("pause");
 		}
 	}
+	r = buscarTitularVehiculo(r, placa);
 	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n");
+	printf("\n\n\t\t      Propietario: %s %s",r->nombre, r->apellidos);
+	printf("\n\n\t\t      Cedula: %s %s",r->cedula);
 	printf("\n\n\t\t\tPlaca: %s",aux->placa);
 	printf("\n\n\t\t\tMarca: %s",aux->marca);
 	printf("\n\n\t\t\tModelo: %s",aux->modelo);
@@ -996,3 +1022,107 @@ void validarAnnio(struct persona **t){
 		scanf("%i",&(*t)->fechaNacimiento.yy);
 	}
 }
+
+///////////////////////////////////////////////////////////FUNCIONES VALIDAR///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////FUNCIONES ELIMINAR///////////////////////////////////////////////////////////////
+
+void eliminarInfraccion(struct vehiculo **v, struct infraccion **f, int numeroInfraccion){
+	struct infraccion *aux = *f;                  
+	struct infraccion *auxAn= *f;
+	while(aux){                                    //Mientras la lista de infracciones exista
+	
+		if(aux->numero == numeroInfraccion){       //Si encuentro la infraccion con ese numero 
+			if(aux == auxAn){                      //Si los dos apuntadores estan al principio de la lista
+				*f=(*f)->infraccionProx;           //Muevo el apuntador cabeza
+				(*v)->datosInfraccion = *f;        //Enlazo el vehiculo con el resto de las infracciones
+	
+			} else auxAn->infraccionProx=aux->infraccionProx;
+				
+			free(aux);                              //Libero memoria
+			return;                                 //Me salgo de la funcion
+		}
+		auxAn=aux;
+		aux = aux->infraccionProx;
+	}
+}
+
+void eliminarVehiculo(struct persona **p, struct vehiculo **v, char placa[8]){
+	struct vehiculo *aux = *v;
+	struct vehiculo *auxAn= *v;
+	while(aux){                                 //Mientras la lista de vehiculos exista
+		if(!strcmp(aux->placa, placa)){         //Si conseguimos el vehiculo con la placa
+			if(aux == auxAn){                   //si los dos apuntadores apuntan a la cabeza de la lista de vehiculos
+			
+				*v=(*v)->vehiculoProx;          //Muevo el apuntador cabeza al proximo
+				(*p)->datosVehiculo = *v;       //Hago el enlazamiento de la lista de persona al nuevo puntero cabeza
+				
+			} else auxAn->vehiculoProx=aux->vehiculoProx; //Si no estan al comienzo, enlazo el anterior con el proximo de aux
+			
+//Le paso el apuntador vehiculo, la lista de infracciones y el numero de infraccion que se quiere borrar, siempre sera el primero en este caso
+			while(aux->datosInfraccion) eliminarInfraccion(&aux, &aux->datosInfraccion, aux->datosInfraccion->numero); //Elimino todas las infracciones
+
+			free(aux);  //Libero memoria
+			return;
+		}
+		auxAn=aux;
+		aux = aux->vehiculoProx;
+	}
+}
+
+void eliminarPersona(struct persona **p, int cedula){
+	struct persona *aux = *p;
+	struct persona *auxAn= *p;
+	while(aux){                                 //Mientras la lista de personas exista
+		if(aux->cedula == cedula){         //Si la persona con esa cedula
+			if(aux == auxAn){                   //si los dos apuntadores apuntan a la cabeza de la lista de personas
+			
+				*p=(*p)->personaProx;          //Muevo el apuntador cabeza al proximo
+				
+			} else auxAn->personaProx=aux->personaProx; //Si no estan al comienzo, enlazo el anterior con el proximo de aux
+			
+//Le paso el apuntador persona, la lista de vehiculos y la placa que se quiere borrar, siempre sera el primero en este caso
+			while(aux->datosVehiculo) eliminarVehiculo(&aux, &aux->datosVehiculo, aux->datosVehiculo->placa); //Elimino todos los vehiculos
+
+			free(aux); //Libero memoria
+			return;
+		}
+		auxAn=aux;
+		aux = aux->personaProx;
+	}
+}
+
+void llamadaEliminarPersona(){
+	system("cls");
+	freeBuffer();
+	int cedula,respuesta=0;
+	if(!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	struct persona *aux = NULL;
+	while((!aux)||(respuesta!=1)){
+		system("cls");
+		printf("\n\n\t\t\tIngrese la cedula de la persona que desea eliminar");
+		printf("\n\n\t\t\t(0) Para salir \n\n\t\t\t\t\t");
+		scanf("%i",&cedula);
+		if (cedula==0) return;
+		aux = buscarCedula(p, cedula);
+		if(!aux){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}else{
+			printf("\n\n\t\t\tDesea eliminar los datos de esta persona?\n\t\t\tIngrese 1 si desea hacerlo");
+			printf("\n\n\t\t\tNombre: %s   Apellido: %s",aux->nombre,aux->apellidos);
+			printf("\n\t\t\tCedula: %i\n\n\t\t\t\t\t\t",cedula);
+			scanf("%i",&respuesta);
+		}
+	}
+	eliminarPersona(&p, cedula);
+	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
+	system("pause");
+}
+
+///////////////////////////////////////////////////////////FUNCIONES ELIMINAR///////////////////////////////////////////////////////////////
