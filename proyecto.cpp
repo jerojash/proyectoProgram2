@@ -263,16 +263,23 @@ void menuConsultas(){
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
-		printf("\t\t\t\t\t(1)--POR EL NOMBRE DE UNA PERSONA\n");
-		printf("\t\t\t\t\t(2)--POR CEDULA DE IDENTIDAD\n");
-		printf("\t\t\t\t\t(3)--POR PLACA DE VEHICULO\n");
-		printf("\t\t\t\t\t(4)--POR NUMERO DE INFRACCION\n\n");
-		printf("\t\t\t\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
+		printf("\n\n\t\t(1)--2.1 DADO EL NOMBRE DE UNA PERSONA, BUSCAR TODOS LOS SINONIMOS\n");
+		printf("\t\t         QUE HAY EN EL SISTEMA Y MOSTRAR CEDULA, APELLIDOS Y NOMBRES, \n");
+		printf("\t\t         FECHA DE NACIMIENTO, DIRECCION Y CIUDAD DE NACIMIENTO (PARA \n");
+		printf("\t\t         TRATAR DE UBICAR LA CEDULA DE LA PERSONA QUE NOS INTERESA)\n\n");
+		printf("\t\t(2)--2.2 DADA UNA CEDULA DE IDENTIDAD...\n\n");
+		printf("\t\t(3)------2.2.1 MOSTRAR LOS DATOS COMPLETOS DEL TITULAR Y SUS VEHICULOS\n");
+		printf("\t\t         (PLACA, MARCA, MODELO, A%cO Y COLOR) CON EL TOTAL DE VEHICULOS\n",164);
+		printf("\t\t         QUE POSEE Y EL TOTAL DE MULTAS QUE ADEUDA EL TITULAR EN TOTAL\n\n");
+		printf("\t\t(3)------2.2.2 APELLIDOS Y NOMBRE DEL TITULAR, SU CEDULA. LA PLACA DE\n");
+		printf("\t\t         CADA VEHICULO, MARCA, MODELO, A%cO Y EL TOTAL DE MULTAS PAGADAS\n",164);
+		printf("\t\t         Y NO PAGADAS DE CADA UNO\n\n");
+		printf("\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
 		scanf("%i",&opcion);
 		system("cls");
 		
 		switch (opcion){
-			case 1: //LLAMADA A LA FUNCION consultaPorPersona
+			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
 				break;
 			case 2: //LLAMADA A LA FUNCION consultaPorCedula
 				break;
