@@ -75,6 +75,10 @@ void menuMantenimiento();                            //MENU MANTENIMIENTO. DOS E
 
 void menuOperaMultas();                              //MENU OPERACIONES CON MULTAS
 
+void menuConsultasdos();                             //MENU CONSULTAS 2.2
+
+void menuConsultascuatro();                          //MENU CONSULTAS 2.4
+
 void menuConsultas();                                //MENU CONSULTAS
 
 void menuOperacionesConsultas();                     //MENU OPERACIONES Y CONSULTAS
@@ -259,6 +263,76 @@ void menuOperaMultas(){
 
 }
 
+void menuConsultasdos(){
+	system("cls");
+	int opcion = 2;
+	while(opcion){
+		encabezado();
+		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
+		printf("\t\t\t\t 2.2 DADA UNA CEDULA DE IDENTIDAD MOSTRAR:...\n");
+		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
+		printf("\n\n\t\t(1)--2.2.1 LOS DATOS COMPLETOS DEL TITULAR Y SUS VEHICULOS (PLACA, MARCA\n"); 
+		printf("\t\t           MODELO, A%cO Y COLOR) CON EL TOTAL DE VEHICULOS QUE POSEE Y EL TOTAL\n",164);
+		printf("\t\t           DE MULTAS QUE ADEUDA EL TITULAR EN TOTAL\n\n");
+		printf("\t\t(2)--2.2.2 APELLIDOS Y NOMBRE DEL TITULAR, SU CEDULA\n"); 
+		printf("\t\t           LA PLACA DE CADA VEHICULO, MARCA, MODELO, A%cO Y EL TOTAL DE MULTAS\n",164); 
+		printf("\t\t           PAGADAS Y NO PAGADAS DE CADA UNO\n\n"); 
+		printf("\t\t(3)--2.2.3 DETALLES COMPLETOS DE LAS MULTAS NO PAGADAS DE TODOS SUS VEHICULOS\n");
+		printf("\t\t           ORDENADAS POR NUMERO DE PLACA (ASCENDENTE) Y EL TOTAL ADEUDADO\n\n"); 
+		printf("\t\t(4)--2.2.4 DADA UNA PLACA MOSTRAR TODAS LAS MULTAS COMPLETAS QUE HA TENIDO\n");
+		printf("\t\t           ORDENADAS POR FECHA ASCENDENTE. PRIMERO LAS QUE NO HAN SIDO PAGADAS\n"); 
+		printf("\t\t           Y LUEGO LAS YA CANCELADAS\n\n"); 
+		printf("\t\t(5)--2.2.5 DADO UN TIPO DE INFRACCION MOSTRAR LAS MULTAS COMPLETAS QUE HA TENIDO\n");
+		printf("\t\t           AGRUPADAS POR: VEHICULO (PLACA, MARCA, A%cO)\n",164); 
+		printf("\t\t                          FECHA DE INFRACCION (ASCENDENTE)\n\n"); 
+		printf("\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
+		scanf("%i",&opcion);
+		system("cls");
+		switch (opcion){
+			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
+				break;
+			case 2: //LLAMADA A LA FUNCION 
+				break;
+			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
+				break;
+			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
+				break;
+		}
+	}
+}
+
+void menuConsultascuatro(){
+	system("cls");
+	int opcion = 4;
+	while(opcion){
+		encabezado();
+		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
+		printf("\t\t\t\t 2.4 DADO UN TIPO DE INFRACCION Y DOS A%cOS (PUEDE SER EL MISMO):...\n",164);
+		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
+		printf("\n\n\t\t(1)--2.4.1 TODAS LAS MULTAS NO PAGADAS (CEDULA, APELLIDOS Y NOMBRE, \n"); 
+		printf("\t\t           PLACA, MARCA, A%cO, FECHA DE MULTA, MONTO) ORDENADO POR \n",164);
+		printf("\t\t           NUMERO DE CEDULA DE LOS INFRACTORES (DESCENDENTE) Y EL \n");
+		printf("\t\t           TOTAL DE INGRESO PENDIENTE POR MULTAS NO PAGADAS\n\n",164); 
+		printf("\t\t(2)--2.4.2 TODAS LAS MULTAS PAGADAS (CEDULA, APELLIDOS Y NOMBRE, PLACA, \n");
+		printf("\t\t           MARCA A%cO, FECHA DE MULTA, MONTO) ORDENADO POR NUMERO DE \n",164); 
+		printf("\t\t           CEDULA DE LOS INFRACTORES (ASCENDIENTE) Y EL TOTAL DE INGRESO\n"); 
+		printf("\t\t           POR MULTAS YA PAGADAS\n\n");
+		printf("\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
+		scanf("%i",&opcion);
+		system("cls");
+		switch (opcion){
+			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
+				break;
+			case 2: //LLAMADA A LA FUNCION 
+				break;
+			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
+				break;
+			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
+				break;
+		}
+	}
+}
+
 void menuConsultas(){
 	system("cls");
 	int opcion = 1;
@@ -266,29 +340,29 @@ void menuConsultas(){
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
-		printf("\n\n\t\t(1)--2.1 DADO EL NOMBRE DE UNA PERSONA, BUSCAR TODOS LOS SINONIMOS\n");
-		printf("\t\t         QUE HAY EN EL SISTEMA Y MOSTRAR CEDULA, APELLIDOS Y NOMBRES, \n");
-		printf("\t\t         FECHA DE NACIMIENTO, DIRECCION Y CIUDAD DE NACIMIENTO (PARA \n");
-		printf("\t\t         TRATAR DE UBICAR LA CEDULA DE LA PERSONA QUE NOS INTERESA)\n\n");
-		printf("\t\t(2)--2.2 DADA UNA CEDULA DE IDENTIDAD...\n\n");
-		printf("\t\t(3)------2.2.1 MOSTRAR LOS DATOS COMPLETOS DEL TITULAR Y SUS VEHICULOS\n");
-		printf("\t\t         (PLACA, MARCA, MODELO, A%cO Y COLOR) CON EL TOTAL DE VEHICULOS\n",164);
-		printf("\t\t         QUE POSEE Y EL TOTAL DE MULTAS QUE ADEUDA EL TITULAR EN TOTAL\n\n");
-		printf("\t\t(3)------2.2.2 APELLIDOS Y NOMBRE DEL TITULAR, SU CEDULA. LA PLACA DE\n");
-		printf("\t\t         CADA VEHICULO, MARCA, MODELO, A%cO Y EL TOTAL DE MULTAS PAGADAS\n",164);
-		printf("\t\t         Y NO PAGADAS DE CADA UNO\n\n");
+		printf("\n\n\t\t(1)--2.1 DADO EL NOMBRE DE UNA PERSONA:\n"); 
+		printf("\t\t            BUSCAR TODOS LOS SINONIMOS QUE HAY EN EL SISTEMA Y\n");
+		printf("\t\t            MOSTRAR CEDULA, APELLIDOS Y NOMBRES, FECHA DE NACIMIENTO,\n");
+		printf("\t\t            DIRECCION Y CIUDAD DE NACIMIENTO (PARA TRATAR DE UBICAR \n");
+		printf("\t\t            LA CEDULA DE LA PERSONA QUE NOS INTERESA)\n\n");
+		printf("\t\t(2)--2.2 DADA UNA CEDULA DE IDENTIDAD:...\n\n"); 
+		printf("\t\t(3)--2.3 DADA (SOLO) UNA PLACA MOSTRAR:\n"); 
+		printf("\t\t            TODAS LAS MULTAS DE ESE VEHICULO ORDENADAS POR NUMERO DE MULTA\n"); 
+		printf("\t\t            (ASCENDENTE), EL TOTAL DE MULTAS PAGADAS Y EL DE LAS NO PAGADAS\n\n"); 
+		printf("\t\t(4)--2.4 DADO EL TIPO DE INFRACCION Y DOS A%cOS (PUEDE SER EL MISMO):...\n\n",164); 
 		printf("\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
 		scanf("%i",&opcion);
 		system("cls");
-		
 		switch (opcion){
 			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
 				break;
-			case 2: //LLAMADA A LA FUNCION consultaPorCedula
+			case 2: //LLAMADA A LA FUNCION menu2.2
+				menuConsultasdos();
 				break;
 			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
 				break;
-			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
+			case 4: //LLAMADA A LA FUNCION menu2.4
+				menuConsultascuatro();
 				break;
 		}
 	}
@@ -1006,16 +1080,19 @@ void consultarInfraccion(struct persona *f){
 	struct vehiculo *v = buscarInfraccionVehiculo(numero);
 	f = buscarInfraccionPersona(numero);
 	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n");
-	printf("\n\n\t\t      Propietario: %s %s",f->nombre, f->apellidos);
-	printf("\n\n\t\t      Cedula: %i",f->cedula);
-	printf("\n\n\t\t\tPlaca del vehiculo: %s",v->placa);
-	printf("\n\n\t\t\tMarca: %s",v->marca);
-	printf("\n\n\t\t\tModelo: %s",v->modelo);
-	printf("\n\n\t\t\t  Numero de infraccion: %i",aux->numero);
-	printf("\n\n\t\t\t  Tipo de infraccion: %s",aux->tipo);
-	printf("\n\n\t\t\t  Fecha de infraccion: %i/%i/%i",aux->fechaInfraccion.dd,aux->fechaInfraccion.mm,aux->fechaInfraccion.yy);
-	printf("\n\n\t\t\t  Monto de infraccion: %i",aux->monto);
-	printf("\n\n\t\t\t  Estado de infraccion PAGADO: %s\n\n",aux->pagado);
+	printf("\n\n\t\t      Datos del propietario: %s %s");
+	printf("\n\n\t\t\t      - Nombre y apellidos: %s %s",f->nombre, f->apellidos);
+	printf("\n\n\t\t\t      - Cedula: %i",f->cedula);
+	printf("\n\n\t\t      Datos del vehiculo: %s %s");
+	printf("\n\n\t\t\t      - Placa del vehiculo: %s",v->placa);
+	printf("\n\n\t\t\t      - Marca: %s",v->marca);
+	printf("\n\n\t\t\t      - Modelo: %s",v->modelo);
+	printf("\n\n\t\t      Datos de la infraccion: %s %s");
+	printf("\n\n\t\t\t      - Numero de infraccion: %i",aux->numero);
+	printf("\n\n\t\t\t      - Tipo de infraccion: %s",aux->tipo);
+	printf("\n\n\t\t\t      - Fecha de infraccion: %i/%i/%i",aux->fechaInfraccion.dd,aux->fechaInfraccion.mm,aux->fechaInfraccion.yy);
+	printf("\n\n\t\t\t      - Monto de infraccion: %i",aux->monto);
+	printf("\n\n\t\t\t      - Estado de infraccion PAGADO: %s\n\n",aux->pagado);
 	system("pause");
 	system("cls");
 }
