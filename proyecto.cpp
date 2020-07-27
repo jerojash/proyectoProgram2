@@ -115,6 +115,9 @@ void llamadaEliminarVehiculo();
 
 struct infraccion * buscarInfraccion(int numero);
 
+void consultarInfraccion(struct persona *f);
+
+
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -228,9 +231,9 @@ void menuMantenimiento(){
 }
 
 void menuOperaMultas(){
-	system("cls");
 	int opcion = 1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t     OPERACIONES Y CONSULTAS->OPERACIONES CON MULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -247,7 +250,7 @@ void menuOperaMultas(){
 				break;
 			case 2: //LLAMADA A LA FUNCION pagarMulta
 				break;
-			case 3: //LLAMADA A LA FUNCION consultarPorMulta
+			case 3: consultarInfraccion(p);//LLAMADA A LA FUNCION consultarPorMulta
 				break;
 			case 4: //LLAMADA A LA FUNCION moverEliminarMulta
 				break;
@@ -305,7 +308,7 @@ void menuOperacionesConsultas(){
 		system("cls");
 		
 		switch (opcion){
-			case 1: //LLAMADA A LA FUNCION menuOperaMultas
+			case 1: menuOperaMultas();//LLAMADA A LA FUNCION menuOperaMultas
 				menuOperaMultas();
 				break;
 			case 2: //LLAMADA A LA FUNCION menuConsultas
@@ -923,6 +926,42 @@ struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si 
 	} return NULL;
 }
 
+struct persona * buscarInfraccionPersona(int numero){
+	struct persona *h = p; 
+	struct vehiculo *v;
+	struct infraccion *f;
+	while(h){                      //Mientras todabia hayan personas en el sistema
+		v = h->datosVehiculo;
+		while (v){                 //Mientras la persona del apuntador tenga vehiculos registrados
+			f = v->datosInfraccion;
+			while(f){              //Se comparara la lista de infracciones de cada vehiculo
+				if (f->numero == numero) return h;
+				f = f->infraccionProx;
+			}
+			v = v->vehiculoProx;
+		}
+		h = h->personaProx;
+	}return NULL;
+}
+
+struct vehiculo * buscarInfraccionVehiculo(int numero){
+	struct persona *h = p; 
+	struct vehiculo *v;
+	struct infraccion *f;
+	while(h){                      //Mientras todabia hayan personas en el sistema
+		v = h->datosVehiculo;
+		while (v){                 //Mientras la persona del apuntador tenga vehiculos registrados
+			f = v->datosInfraccion;
+			while(f){              //Se comparara la lista de infracciones de cada vehiculo
+				if (f->numero == numero) return v;
+				f = f->infraccionProx;
+			}
+			v = v->vehiculoProx;
+		}
+		h = h->personaProx;
+	}return NULL;
+}
+
 struct infraccion * buscarInfraccion(int numero){
 	struct persona *h = p; 
 	struct vehiculo *v;
@@ -940,6 +979,47 @@ struct infraccion * buscarInfraccion(int numero){
 		h = h->personaProx;
 	}return NULL;
 }
+
+void consultarInfraccion(struct persona *f){
+	system("cls");
+	freeBuffer();
+	int numero;
+	if(!f){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	struct infraccion *aux = NULL;
+	while(!aux){
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion que desea buscar");
+		printf("\n\n\t\t\t(0) Para salir \n\n\t\t\t\t\t");
+		scanf("%i",&numero);
+		if (numero==0) return;
+		aux = buscarInfraccion(numero);
+		if(!aux){
+			system("cls");
+			printf("\n\n\t\t\t   LA INFRACCION NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	struct vehiculo *v = buscarInfraccionVehiculo(numero);
+	f = buscarInfraccionPersona(numero);
+	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n");
+	printf("\n\n\t\t      Propietario: %s %s",f->nombre, f->apellidos);
+	printf("\n\n\t\t      Cedula: %i",f->cedula);
+	printf("\n\n\t\t\tPlaca del vehiculo: %s",v->placa);
+	printf("\n\n\t\t\tMarca: %s",v->marca);
+	printf("\n\n\t\t\tModelo: %s",v->modelo);
+	printf("\n\n\t\t\t  Numero de infraccion: %i",aux->numero);
+	printf("\n\n\t\t\t  Tipo de infraccion: %s",aux->tipo);
+	printf("\n\n\t\t\t  Fecha de infraccion: %i/%i/%i",aux->fechaInfraccion.dd,aux->fechaInfraccion.mm,aux->fechaInfraccion.yy);
+	printf("\n\n\t\t\t  Monto de infraccion: %i",aux->monto);
+	printf("\n\n\t\t\t  Estado de infraccion PAGADO: %s\n\n",aux->pagado);
+	system("pause");
+	system("cls");
+}
+
 void consultarVehiculoPlaca(struct persona *r){
 	system("cls");
 	freeBuffer();
