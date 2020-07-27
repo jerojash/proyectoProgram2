@@ -113,6 +113,8 @@ void modificarVehiculo(struct persona **p);
 
 void llamadaEliminarVehiculo();
 
+struct infraccion * buscarInfraccion(int numero);
+
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -361,6 +363,15 @@ struct infraccion * agregarInfraccion(){
 	printf("\n\t\t\tIngrese el numero de infraccion: "); 
 	scanf("%i",&auxInfraccion->numero);
 	
+		while(buscarInfraccion(auxInfraccion->numero)){
+			system("cls");
+			printf("\n\n\t\t\t\tEse numero de infraccion ya está registrado\n\n");
+			system("pause");
+			system("cls");
+			printf("\n\t\t\tIngrese el numero de infraccion: "); 
+			scanf("%i",&auxInfraccion->numero);
+		}
+	
 	freeBuffer();
 	printf("\n\t\t\tIngrese el tipo de infraccion: "); 
 	gets(auxInfraccion->tipo);
@@ -437,7 +448,7 @@ struct infraccion * agregarInfraccion(){
 		gets(auxInfraccion->pagado);
 	}
 	
-	auxInfraccion->infraccionProx = NULL;
+	//auxInfraccion->infraccionProx = NULL;
 	return auxInfraccion;
 }
 
@@ -898,6 +909,30 @@ struct vehiculo *buscarPlaca(struct persona *q, char placa[8]){ //Retorna NULL s
 	} return NULL;
 }
 
+struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si no consigue la cedula.		  //sino, retorna el apuntador de esa placa
+	while(r){
+		if(r->cedula == cedula) return r;
+		r = r->personaProx;
+	} return NULL;
+}
+
+struct infraccion * buscarInfraccion(int numero){
+	struct persona *h = p; 
+	struct vehiculo *v;
+	struct infraccion *f;
+	while(h){                      //Mientras todabia hayan personas en el sistema
+		v = h->datosVehiculo;
+		while (v){                 //Mientras la persona del apuntador tenga vehiculos registrados
+			f = v->datosInfraccion;
+			while(f){              //Se comparara la lista de infracciones de cada vehiculo
+				if (f->numero == numero) return f;
+				f = f->infraccionProx;
+			}
+			v = v->vehiculoProx;
+		}
+		h = h->personaProx;
+	}return NULL;
+}
 void consultarVehiculoPlaca(struct persona *r){
 	system("cls");
 	freeBuffer();
@@ -1013,12 +1048,6 @@ void consultarPersonaNombre(struct persona *p){
 	system("cls");
 }
 
-struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si no consigue la cedula.		  //sino, retorna el apuntador de esa placa
-	while(r){
-		if(r->cedula == cedula) return r;
-		r = r->personaProx;
-	} return NULL;
-}
 
 void consultarPersonaCedula(struct persona *p){
 	system("cls");
