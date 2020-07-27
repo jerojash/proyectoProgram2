@@ -121,6 +121,8 @@ struct infraccion * buscarInfraccion(int numero);
 
 void consultarInfraccion(struct persona *f);
 
+void llamadaAgregarInfraccion(struct persona **p);
+
 
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
@@ -250,7 +252,7 @@ void menuOperaMultas(){
 		system("cls");
 		
 		switch (opcion){
-			case 1: //LLAMADA A LA FUNCION agregarMulta
+			case 1: llamadaAgregarInfraccion(&p);//LLAMADA A LA FUNCION agregarMulta
 				break;
 			case 2: //LLAMADA A LA FUNCION pagarMulta
 				break;
@@ -383,7 +385,6 @@ void menuOperacionesConsultas(){
 		
 		switch (opcion){
 			case 1: menuOperaMultas();//LLAMADA A LA FUNCION menuOperaMultas
-				menuOperaMultas();
 				break;
 			case 2: //LLAMADA A LA FUNCION menuConsultas
 				menuConsultas();
@@ -772,6 +773,45 @@ void llamadaAgregarVehiculo(struct persona **p){
 	}
 }
 
+void llamadaAgregarInfraccion(struct persona **p){
+	int posicion;
+	char placa[8];
+	struct vehiculo *auxVehiculo = NULL;
+	struct infraccion * auxInfraccion;
+	if(!*p){
+		printf("\n\n\t\t\tNo existen usuarios ingresados al sistema. Por favor cargue uno\n\n");
+		system("pause");
+		return;
+	}
+	while(!auxVehiculo){
+		
+		printf("\n\tIngrese la placa del vehiculo (Ya debe estar registrado en el sistema)");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+		freeBuffer();
+		gets(placa);
+		if(!strcmp(placa,"0")) return;
+		strcpy(placa,strupr(placa));
+		auxVehiculo=buscarPlaca(*p,placa);
+		if (!auxVehiculo){
+			system("cls");
+			printf("\n\n\t\t\t\tEsa placa no se encuentra en el sistema\n\n");
+			system("pause");
+			system("cls");	
+		}	
+	}
+	system("cls");
+	//freeBuffer();
+	auxInfraccion = agregarInfraccion();
+	
+	printf("\n\n\t\t\t     Desea guardar estos datos?");
+	printf("\n\t\t      Escriba (1) si desea cargar los datos: ");
+	scanf("%i",&posicion);
+	if (posicion == 1){
+		auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
+		auxVehiculo->datosInfraccion = auxInfraccion;
+		
+	}
+}
 ///////////////////////////////////////////////////////////FUNCIONES AGREGAR///////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////FUNCIONES MODIFICAR///////////////////////////////////////////////////////////////
@@ -1080,14 +1120,14 @@ void consultarInfraccion(struct persona *f){
 	struct vehiculo *v = buscarInfraccionVehiculo(numero);
 	f = buscarInfraccionPersona(numero);
 	printf("\n\n\t\t\t\tSE ENCONTRARON LOS SIGUIENTES DATOS\n");
-	printf("\n\n\t\t      Datos del propietario: %s %s");
+	printf("\n\n\t\t      Datos del propietario:");
 	printf("\n\n\t\t\t      - Nombre y apellidos: %s %s",f->nombre, f->apellidos);
 	printf("\n\n\t\t\t      - Cedula: %i",f->cedula);
-	printf("\n\n\t\t      Datos del vehiculo: %s %s");
+	printf("\n\n\t\t      Datos del vehiculo: ");
 	printf("\n\n\t\t\t      - Placa del vehiculo: %s",v->placa);
 	printf("\n\n\t\t\t      - Marca: %s",v->marca);
 	printf("\n\n\t\t\t      - Modelo: %s",v->modelo);
-	printf("\n\n\t\t      Datos de la infraccion: %s %s");
+	printf("\n\n\t\t      Datos de la infraccion: ");
 	printf("\n\n\t\t\t      - Numero de infraccion: %i",aux->numero);
 	printf("\n\n\t\t\t      - Tipo de infraccion: %s",aux->tipo);
 	printf("\n\n\t\t\t      - Fecha de infraccion: %i/%i/%i",aux->fechaInfraccion.dd,aux->fechaInfraccion.mm,aux->fechaInfraccion.yy);
