@@ -119,9 +119,15 @@ void llamadaEliminarVehiculo();
 
 struct infraccion * buscarInfraccion(int numero);
 
+struct persona * buscarInfraccionPersona(int numero);
+
+struct vehiculo * buscarInfraccionVehiculo(int numero);
+
 void consultarInfraccion(struct persona *f);
 
 void llamadaAgregarInfraccion(struct persona **p);
+
+void pagarMulta();
 
 
 
@@ -254,7 +260,7 @@ void menuOperaMultas(){
 		switch (opcion){
 			case 1: llamadaAgregarInfraccion(&p);//LLAMADA A LA FUNCION agregarMulta
 				break;
-			case 2: //LLAMADA A LA FUNCION pagarMulta
+			case 2: pagarMulta();//LLAMADA A LA FUNCION pagarMulta
 				break;
 			case 3: consultarInfraccion(p);//LLAMADA A LA FUNCION consultarPorMulta
 				break;
@@ -888,7 +894,7 @@ void modificarVehiculo(struct persona **p){
 
 void modificarPersona(struct persona **p){
 	system("cls");
-	int cedula,posicion, respuesta=0;
+	int cedula, respuesta=0;
 	struct persona *aux;
 	
 	if(!*p){ //VALIDO PARA SABER SI LA BASE DE DATOS ESTA VACIA
@@ -1005,6 +1011,53 @@ void modificarPersona(struct persona **p){
 	system("pause");
 	freeBuffer();
 	system("cls");
+}
+
+void pagarMulta(){
+	int numero;
+	struct infraccion * aux = NULL;
+	if(!p){
+		printf("\n\n\t\t\tNo existen usuarios ingresados al sistema. Por favor cargue uno\n\n");
+		system("pause");
+		return;
+	}
+	while(!aux){
+		
+		printf("\n\tIngrese el numero de infraccion que desea pagar (Ya debe estar registrado en el sistema)");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+		freeBuffer();
+		scanf("%i",&numero);
+		if(!numero) return;
+		aux=buscarInfraccion(numero);
+		if (!aux){
+			system("cls");
+			printf("\n\n\t\t\t\tEse numero de infraccion no se encuentra en el sistema\n\n");
+			system("pause");
+			system("cls");	
+		}
+	}
+	system("cls");
+	if (!strcmp(aux->pagado,"SI")){
+		printf("\n\n\n\n\t\t\t\tLa multa de numero %i ya ha sido pagada\n\n",aux->numero);
+		system("pause");
+		return;
+	}
+	struct persona *r =buscarInfraccionPersona(numero);
+	struct vehiculo *v = buscarInfraccionVehiculo(numero);
+	printf("\n\n\t\t\t\tPropietario: %s %s",r->nombre,r->apellidos);
+	printf("\n\n\t\t\t\t\tPlaca del vehiculo: %s",v->placa);
+	printf("\n\n\t\t\t\t       Tipo de multa: %s", aux->tipo);
+	printf("\n\n\t\t\t\t       Multa numero: %i  Monto: %i",aux->numero,aux->monto);
+	printf("\n\n\t\t\t\t\t    Fecha: %i/%i/%i  ",aux->fechaInfraccion.dd,aux->fechaInfraccion.mm,aux->fechaInfraccion.yy);
+	printf("\n\n\n\t\t\t\t Desea pagar esta multa?  Ingrese 1\n\n\t\t\t\t\t\t      ");
+	scanf("%i",&numero);
+	system("cls");
+	if(numero == 1){
+		strcpy(aux->pagado, "SI");
+		printf("\n\n\n\n\t\t\t\t\tLA MULTA SE HA PAGADO CON EXITO\n\n\n");
+	}else printf("\n\n\n\n\t\t\t\t    NO SE HA PAGADO LA MULTA, INTENTE DE NUEVO\n\n\n");
+	
+	system("pause");
 }
 
 ///////////////////////////////////////////////////////////FUNCIONES MODIFICAR///////////////////////////////////////////////////////////////
