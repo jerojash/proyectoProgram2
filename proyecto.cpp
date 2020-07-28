@@ -127,8 +127,11 @@ void consultarInfraccion(struct persona *f);
 
 void llamadaAgregarInfraccion(struct persona **p);
 
-void pagarMulta();
+void pagarInfraccion();
 
+void moverInfraccion();
+
+void llamadaEliminarInfraccion();
 
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
@@ -252,7 +255,8 @@ void menuOperaMultas(){
 		printf("\t\t\t\t\t(1)--AGREGAR\n");
 		printf("\t\t\t\t\t(2)--PAGAR\n");
 		printf("\t\t\t\t\t(3)--CONSULTAR POR NUMERO DE MULTA\n");
-		printf("\t\t\t\t\t(4)--MOVER O ELIMINAR\n\n");
+		printf("\t\t\t\t\t(4)--MOVER\n");
+		printf("\t\t\t\t\t(5)--ELIMINAR\n\n");
 		printf("\t\t\t\t\t(0)--ATRAS\n\n\t\t\t\t\t\t\t");
 		scanf("%i",&opcion);
 		system("cls");
@@ -260,11 +264,13 @@ void menuOperaMultas(){
 		switch (opcion){
 			case 1: llamadaAgregarInfraccion(&p);//LLAMADA A LA FUNCION agregarMulta
 				break;
-			case 2: pagarMulta();//LLAMADA A LA FUNCION pagarMulta
+			case 2: pagarInfraccion();//LLAMADA A LA FUNCION pagarMulta
 				break;
 			case 3: consultarInfraccion(p);//LLAMADA A LA FUNCION consultarPorMulta
 				break;
-			case 4: //LLAMADA A LA FUNCION moverEliminarMulta
+			case 4: moverInfraccion();//LLAMADA A LA FUNCION moverMulta
+				break;
+			case 5: llamadaEliminarInfraccion();//LLAMADA A LA FUNCIÓN eliminarMulta
 				break;
 		}
 	}
@@ -342,9 +348,9 @@ void menuConsultascuatro(){
 }
 
 void menuConsultas(){
-	system("cls");
 	int opcion = 1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -362,7 +368,7 @@ void menuConsultas(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
+			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION consultaPorPersona
 				break;
 			case 2: //LLAMADA A LA FUNCION menu2.2
 				menuConsultasdos();
@@ -820,7 +826,7 @@ void llamadaAgregarInfraccion(struct persona **p){
 }
 ///////////////////////////////////////////////////////////FUNCIONES AGREGAR///////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////FUNCIONES MODIFICAR///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////FUNCIONES MODIFICAR/MOVER///////////////////////////////////////////////////////////////
 
 void modificarVehiculo(struct persona **p){
 	system("cls");
@@ -1013,7 +1019,7 @@ void modificarPersona(struct persona **p){
 	system("cls");
 }
 
-void pagarMulta(){
+void pagarInfraccion(){
 	int numero;
 	struct infraccion * aux = NULL;
 	if(!p){
@@ -1060,9 +1066,65 @@ void pagarMulta(){
 	system("pause");
 }
 
-///////////////////////////////////////////////////////////FUNCIONES MODIFICAR///////////////////////////////////////////////////////////////
+void moverInfraccion(){
+	system("cls");
+	int numero;
+	char placa[8];
+	struct infraccion *f=NULL;
+	struct vehiculo *vOrigen;
+	struct vehiculo *vDestino = NULL;
+	struct persona *hOrigen;
+	struct persona *hDestino;
+	if(!p){
+		printf("\n\n\t\t\tNo existen usuarios ingresados al sistema. Por favor cargue uno\n\n");
+		system("pause");
+		return;
+	}
+	while(!f){
+		printf("\n\n\t\t\tIngrese el numero de la infraccion que desea mover:\n\t\t\t\t\t\t");
+		scanf("%i",&numero);
+		if (numero==0)return;
+		f=buscarInfraccion(numero);
+		if(!f){
+			system("cls");
+			printf("\n\n\t\t\t\tEse numero de infraccion no se encuentra en el sistema\n\n");
+			system("pause");
+			system("cls");
+		}
+	}
+	vOrigen= buscarInfraccionVehiculo(f->numero);
+	hOrigen= buscarInfraccionPersona(f->numero);
+	while(!vDestino){
+		printf("\n\n\t\tIngrese la placa del vehiculo al que se le agregara la infraccion:\n\t\t\t\t\t\t");
+		freeBuffer();
+		gets(placa);
+		strcpy(placa,strupr(placa));
+		vDestino = buscarPlaca(p,placa);
+		if(!vDestino){
+			system("cls");
+			printf("\n\n\t\t\t\tEsa placa no se encuentra en el sistema\n\n");
+			system("pause");
+			system("cls");
+		}
+	}
+	hDestino= buscarTitularVehiculo(p,placa);
+	printf("\n\n\t\tDatos origen:\t\t\tDatos destino:");
+	printf("\n\n\t\t  Vehiculo: %s\t\t\t  Vehiculo: %s",vOrigen->placa,vDestino->placa);
+	printf("\n\t\t  Propietario: %s\t\t  Propietario %s",hOrigen->nombre,hDestino->nombre);
+	printf("\n\n\n\t\tDesea mover la infraccion desde Datos origen a Datos destino?");
+	printf("\n\t\t\t\tIngrese 1 para hacer la transferencia: ");
+	scanf("%i",&numero);
+	if (numero == 1){
+		vOrigen->datosInfraccion = vOrigen->datosInfraccion->infraccionProx;
+		f->infraccionProx = vDestino->datosInfraccion;
+		vDestino->datosInfraccion = f;
+		printf("\n\n\n\t\t\tDATOS MODIFICADOS EXITOSAMENTE");
+		system("pause");
+	}
+}
+////////////////////////////////////////////////////////FUNCIONES MODIFICAR/MOVER///////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
 
 struct persona *buscarTitularVehiculo(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   	   //sino, retorna el apuntador de esa placa
 	while(q){
@@ -1305,7 +1367,6 @@ void consultarPersonaNombre(struct persona *p){
 	system("cls");
 }
 
-
 void consultarPersonaCedula(struct persona *p){
 	system("cls");
 	freeBuffer();
@@ -1339,7 +1400,8 @@ void consultarPersonaCedula(struct persona *p){
 	system("cls");
 }
 
-///////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR///////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR//////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////FUNCIONES VALIDAR///////////////////////////////////////////////////////////////
 void validarDia(struct persona **t){
@@ -1526,8 +1588,50 @@ void llamadaEliminarVehiculo(){
 			scanf("%i",&respuesta);
 		}
 	}
-	eliminarVehiculo(&persona, &vehiculo,vehiculo->placa);
+	eliminarVehiculo(&persona, &persona->datosVehiculo,vehiculo->placa);
 	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
 	system("pause");
 }
-///////////////////////////////////////////////////////////FUNCIONES ELIMINAR///////////////////////////////////////////////////////////////
+
+void llamadaEliminarInfraccion(){
+	system("cls");
+	freeBuffer();
+	int numero,respuesta=0;
+	if(!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	struct persona *persona = NULL;
+	struct vehiculo *vehiculo = NULL;
+	struct infraccion * infraccion = NULL;
+	while((!infraccion)||(respuesta!=1)){
+		system("cls");
+		printf("\n\n\t\t\tIngrese el numero de infraccion que desea eliminar");
+		printf("\n\n\t\t\t(0) Para salir \n\n\t\t\t\t\t");
+		scanf("%i",&numero);
+		if (numero == 0) return;
+		infraccion = buscarInfraccion(numero);
+		if(!infraccion){
+			system("cls");
+			printf("\n\n\t\t\t\tLA PLACA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}else{
+			persona = buscarInfraccionPersona(numero);
+			vehiculo = buscarInfraccionVehiculo(numero);
+			printf("\n\n\t\t\tDesea eliminar esta infraccion del sistema?\n\t\t\tIngrese 1 si desea hacerlo");
+			printf("\n\n\t\t\tPropietario: %s %s",persona->nombre,persona->apellidos);
+			printf("\n\n\t\t\tCedula: %i Placa del vehiculo: %s",persona->cedula,vehiculo->placa);
+			printf("\n\n\t\t\tMarca: %s Modelo: %s",vehiculo->marca,vehiculo->modelo);
+			printf("\n\n\t\t\t      Numero Infraccion: %i",infraccion->numero);
+			printf("\n\n\t\t\t      Tipo de infraccion: %s",infraccion->tipo);
+			printf("\n\n\t\t\t      Fecha de infraccion: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+			printf("\n\n\t\t\t      Pagado: %s\n\n\t\t\t\t\t",infraccion->pagado);
+			scanf("%i",&respuesta);
+		}
+	}
+	eliminarInfraccion(&vehiculo, &vehiculo->datosInfraccion,numero);
+	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
+	system("pause");
+}
+///////////////////////////////////////////////////////////FUNCIONES ELIMINAR/////////////////////////////////////////////////////////////// 
