@@ -95,7 +95,7 @@ struct persona * buscarCedula(struct persona *r, int cedula);
 
 struct vehiculo *buscarPlaca(struct persona *q, char placa[8]);
 
-void consultarPersonaCedula(struct persona *p);
+void consultarPersonaCedula(int cedula);
 
 void consultarVehiculoPlaca(struct persona *r);
 
@@ -135,6 +135,7 @@ void moverInfraccion();
 
 void llamadaEliminarInfraccion();
 
+void funcionDosDosUno ();
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -305,7 +306,7 @@ void menuConsultasdos(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION consultaPorPersona
+			case 1: funcionDosDosUno (); //LLAMADA A LA FUNCION 2.2.1 PARA BUSCAR LAS DEUDAS
 				break;
 			case 2: //LLAMADA A LA FUNCION 
 				break;
@@ -370,7 +371,7 @@ void menuConsultas(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
+			case 1: printf(""); consultarPersonaNombre(p);//LLAMADA A LA FUNCION consultaPorPersona
 				break;
 			case 2: //LLAMADA A LA FUNCION menu2.2
 				menuConsultasdos();
@@ -423,7 +424,7 @@ void menuConsultarPersona(){
 		switch (opcion){
 			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION agregarPersona
 				break;
-			case 2: consultarPersonaCedula(p);//LLAMADA A LA FUNCION modificarPersona
+			case 2: consultarPersonaCedula(0);//LLAMADA A LA FUNCION modificarPersona
 				break;
 		}
 	}
@@ -1352,16 +1353,15 @@ void consultarPersonaNombre(struct persona *p){
 	system("cls");
 }
 
-void consultarPersonaCedula(struct persona *p){
+void consultarPersonaCedula(int cedula){
 	system("cls");
 	freeBuffer();
-	int cedula;
 	if(!p){
 		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
 		system("pause");
 		return;
 	}	
-	struct persona *aux = NULL;
+	struct persona *aux = buscarCedula(p,cedula);
 	while(!aux){
 		system("cls");
 		printf("\n\n\t\t\tIngrese la cedula de la persona que desea buscar");
@@ -1375,6 +1375,7 @@ void consultarPersonaCedula(struct persona *p){
 			system("pause");
 		}
 	}
+	printf("\n\n\t   Datos del titular:");
 	printf("\n\n\t\t\t- Nombre: %s",aux->nombre);
 	printf("\n\n\t\t\t- Apellidos: %s",aux->apellidos);
 	printf("\n\n\t\t\t- Cedula: %i",aux->cedula);
@@ -1382,7 +1383,6 @@ void consultarPersonaCedula(struct persona *p){
 	printf("\n\n\t\t\t- Lugar de nacimiento: %s",aux->place.ciudad);
 	printf("\n\n\t\t\t- Direccion actual de residencia: %s\n\n",aux->place.direccion);
 	system("pause");
-	system("cls");
 }
 
 
@@ -1639,3 +1639,46 @@ void llamadaEliminarInfraccion(){
 	system("pause");
 }
 ///////////////////////////////////////////////////////////FUNCIONES ELIMINAR///////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
+
+void funcionDosDosUno (){
+	int i,cedula, deuda=0;
+	struct persona *persona=NULL;
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!persona){
+		printf("Ingrese la cedula:");
+		scanf("%i",&cedula);
+		persona=buscarCedula(p,cedula);
+		if (!persona){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	consultarPersonaCedula(cedula);
+	struct vehiculo *vehiculos=persona->datosVehiculo;
+	printf("\n\t   Vehiculos:\n");
+	for (i=1; vehiculos; i++){
+		printf("\n\t\tVehiculo %i\n",i);
+		printf("\n\t\tPlaca: %s",vehiculos->placa);
+		printf("\n\t\tMarca: %s",vehiculos->marca);
+		printf("\n\t\tModelo: %s",vehiculos->modelo);
+		printf("\n\t\tA%co: %i\n",164,vehiculos->annio.yy);
+		while(vehiculos->datosInfraccion){
+			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO"))  deuda+=vehiculos->datosInfraccion->monto;
+			vehiculos->datosInfraccion = vehiculos->datosInfraccion->infraccionProx;
+		} vehiculos=vehiculos->vehiculoProx;
+	}
+	i--;
+	if (!i) printf("\n\n\t\t\t\tNO POSEE VEHICULOS");
+	else printf("\n\n\t\tPosee un totoal de %i vehiculos",i);
+	if (deuda) printf("\n\t\tPosee una deuda de %i Bs\n",deuda);
+	else printf("\n\n\t\t\t\tNo posee deuda");
+	system("pause");
+}
+////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
