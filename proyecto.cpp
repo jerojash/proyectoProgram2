@@ -137,6 +137,12 @@ void llamadaEliminarInfraccion();
 
 void funcionDosDosUno ();
 
+void mostrarPersona(struct persona *persona);
+
+void mostrarVehiculos(struct vehiculo *vehiculos);
+
+void mostrarInfracciones(struct infraccion *datosInfraccion);
+
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
 	int opcion = 1;	
@@ -225,9 +231,9 @@ void menuVehiculos(){
 }
 
 void menuMantenimiento(){
-	system("cls");
 	int opcion=1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t\t      MANTENIMIENTO\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -281,9 +287,9 @@ void menuOperaMultas(){
 }
 
 void menuConsultasdos(){
-	system("cls");
 	int opcion = 2;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t 2.2 DADA UNA CEDULA DE IDENTIDAD MOSTRAR:...\n");
@@ -319,9 +325,9 @@ void menuConsultasdos(){
 }
 
 void menuConsultascuatro(){
-	system("cls");
 	int opcion = 4;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t 2.4 DADO UN TIPO DE INFRACCION Y DOS A%cOS (PUEDE SER EL MISMO):...\n",164);
@@ -338,7 +344,7 @@ void menuConsultascuatro(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: printf("");//LLAMADA A LA FUNCION consultaPorPersona
+			case 1: //LLAMADA A LA FUNCION consultaPorPersona
 				break;
 			case 2: //LLAMADA A LA FUNCION 
 				break;
@@ -351,9 +357,9 @@ void menuConsultascuatro(){
 }
 
 void menuConsultas(){
-	system("cls");
 	int opcion = 1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t   OPERACIONES Y CONSULTAS->CONSULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -386,9 +392,9 @@ void menuConsultas(){
 }
 
 void menuOperacionesConsultas(){
-	system("cls");
 	int opcion= 1;
 	while(opcion){
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t\t  OPERACIONES Y CONSULTAS\n\n");
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
@@ -425,6 +431,7 @@ void menuConsultarPersona(){
 			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION agregarPersona
 				break;
 			case 2: consultarPersonaCedula(0);//LLAMADA A LA FUNCION modificarPersona
+					system("pause");
 				break;
 		}
 	}
@@ -459,7 +466,7 @@ struct infraccion * agregarInfraccion(){  //FUNCION PARA AGREGAR UNA INFRACCION 
 	int num;
 
 	struct infraccion *auxInfraccion = new struct infraccion;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
-
+	system("cls");
 	printf("\n\t\t\tIngrese el numero de infraccion: "); 
 	scanf("%i",&auxInfraccion->numero);
 	
@@ -553,9 +560,11 @@ struct infraccion * agregarInfraccion(){  //FUNCION PARA AGREGAR UNA INFRACCION 
 }
 
 struct vehiculo * agregarVehiculo(){ //FUNCION PARA AGREGAR UN VEHICULO A UNA PERSONA
+	system("cls");
 	int num;
 	freeBuffer();
 	struct vehiculo *auxVehiculo = new struct vehiculo;  //RESERVO MEMORIA DEL TIPO DE ESTRUCTURA DEL VEHICULO
+
 	printf("\n\t\t\tIngrese la placa (8 caracteres max): "); 
 	gets(auxVehiculo->placa);
 	
@@ -569,6 +578,11 @@ struct vehiculo * agregarVehiculo(){ //FUNCION PARA AGREGAR UN VEHICULO A UNA PE
 		gets(auxVehiculo->placa);
 		strcpy(auxVehiculo->placa,strupr(auxVehiculo->placa));  //CONVIERTO LA PLACA EN PURAS MAYUSCULAS
 	}
+	
+	struct vehiculo *auxV = p->datosVehiculo;
+	auxVehiculo->vehiculoProx = p->datosVehiculo;
+	p->datosVehiculo = auxVehiculo;
+	
 	printf("\n\t\t\tIngrese la marca del vehiculo: "); 
 	gets(auxVehiculo->marca);
 	strcpy(auxVehiculo->marca,strupr(auxVehiculo->marca));
@@ -605,9 +619,12 @@ struct vehiculo * agregarVehiculo(){ //FUNCION PARA AGREGAR UN VEHICULO A UNA PE
 			auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
 			auxVehiculo->datosInfraccion = auxInfraccion;
 		}
-	}
+	};
 	
+	p->datosVehiculo = auxV;
+
 	return auxVehiculo;
+	
 }
 
 void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
@@ -655,6 +672,9 @@ void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
 		printf("\n\n\t\t\tIngrese la cedula: ");
 		scanf("%li",&aux->cedula);
 	}
+	struct persona *auxP = *p;
+	aux->personaProx = *p;
+	*p = aux;
 	
 	printf("\n\t\t\tIngrese el dia de nacimiento: ");
 	scanf("%i",&(*aux).fechaNacimiento.dd);
@@ -728,14 +748,15 @@ void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
 			aux->datosVehiculo = auxVehiculo;
 		}
 	}
-	printf("\n\n\t\t\tDesea guardar todos los datos?");
+	system("cls");
+	mostrarPersona(aux);
+	//freeBuffer();
+	printf("\n\n\t\t\tDesea guardar todos estos datos?");
+	printf("\n\t\t      Por favor revise los datos ingresados");
 	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
-	freeBuffer();
 	scanf("%i",&num);
-	if (num == 1){
-		aux->personaProx= *p;
-		*p = aux;
-	}
+	if (num != 1)*p = auxP;
+
 	freeBuffer();
 	system("cls");
 }
@@ -1375,14 +1396,13 @@ void consultarPersonaCedula(int cedula){
 			system("pause");
 		}
 	}
-	printf("\n\n\t   Datos del titular:");
+	printf("\n\tDatos del titular:");
 	printf("\n\n\t\t\t- Nombre: %s",aux->nombre);
 	printf("\n\n\t\t\t- Apellidos: %s",aux->apellidos);
 	printf("\n\n\t\t\t- Cedula: %i",aux->cedula);
 	printf("\n\n\t\t\t- Fecha de nacimiento: %i/%i/%i",aux->fechaNacimiento.dd,aux->fechaNacimiento.mm,aux->fechaNacimiento.yy);
 	printf("\n\n\t\t\t- Lugar de nacimiento: %s",aux->place.ciudad);
-	printf("\n\n\t\t\t- Direccion actual de residencia: %s\n\n",aux->place.direccion);
-	system("pause");
+	printf("\n\n\t\t\t- Direccion actual de residencia: %s\n",aux->place.direccion);
 }
 
 
@@ -1682,3 +1702,42 @@ void funcionDosDosUno (){
 	system("pause");
 }
 ////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////FUNCIONES MOSTRAR////////////////////////////////////////////////////////////////
+
+void mostrarPersona(struct persona *persona){
+	consultarPersonaCedula(persona->cedula);
+	struct vehiculo *vehiculos=persona->datosVehiculo;
+	mostrarVehiculos(&*vehiculos);
+}
+
+void mostrarVehiculos(struct vehiculo *vehiculos){
+	int i;
+	if (!vehiculos) printf("\n\n\t\t\tEste propietario no posee vehiculos");
+	while (vehiculos){
+		for (i=1; vehiculos; i++){
+			printf("\n\t-Vehiculo %i",i);
+			printf("\n\n\t\t\t- Placa: %s",vehiculos->placa);
+			printf("\n\n\t\t\t- Marca: %s",vehiculos->marca);
+			printf("\n\n\t\t\t- Modelo: %s",vehiculos->modelo);
+			printf("\n\n\t\t\t- A%co: %i\n",164,vehiculos->annio.yy);
+			if (vehiculos->datosInfraccion) mostrarInfracciones(vehiculos->datosInfraccion);
+			else printf("\n\n\t\t\tEste vehiculo no posee infracciones");
+			vehiculos=vehiculos->vehiculoProx;
+		}
+	}
+}
+
+void mostrarInfracciones(struct infraccion *datosInfraccion){
+	int i;
+	for (i=1; datosInfraccion; i++){
+		printf("\n\n\t\t\tDatos de la infraccion %i",i);
+		printf("\n\n\t\t\t - Numero Infraccion: %i",datosInfraccion->numero);
+		printf("\n\n\t\t\t - Tipo de infraccion: %s",datosInfraccion->tipo);
+		printf("\n\n\t\t\t - Fecha de infraccion: %i/%i/%i",datosInfraccion->fechaInfraccion.dd,datosInfraccion->fechaInfraccion.mm,datosInfraccion->fechaInfraccion.yy);
+		printf("\n\n\t\t\t - Pagado: %s\n\n\t\t\t\t\t",datosInfraccion->pagado);
+		datosInfraccion=datosInfraccion->infraccionProx;
+	}
+}
+
+///////////////////////////////////////////////////////////FUNCIONES MOSTRAR////////////////////////////////////////////////////////////////
