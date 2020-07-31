@@ -1663,7 +1663,7 @@ void llamadaEliminarInfraccion(){
 ////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
 
 void funcionDosDosUno (){
-	int i,cedula, deuda=0;
+	int j,i=1,cedula, deuda=0;
 	struct persona *persona=NULL;
 	if (!p){
 		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
@@ -1682,6 +1682,7 @@ void funcionDosDosUno (){
 	}
 	consultarPersonaCedula(cedula);
 	struct vehiculo *vehiculos=persona->datosVehiculo;
+	struct infraccion *infraccion;
 	printf("\n\t   Vehiculos:\n");
 	for (i=1; vehiculos; i++){
 		printf("\n\t\tVehiculo %i\n",i);
@@ -1689,17 +1690,64 @@ void funcionDosDosUno (){
 		printf("\n\t\tMarca: %s",vehiculos->marca);
 		printf("\n\t\tModelo: %s",vehiculos->modelo);
 		printf("\n\t\tA%co: %i\n",164,vehiculos->annio.yy);
-		while(vehiculos->datosInfraccion){
-			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO"))  deuda+=vehiculos->datosInfraccion->monto;
-			vehiculos->datosInfraccion = vehiculos->datosInfraccion->infraccionProx;
+		infraccion=vehiculos->datosInfraccion;
+		while(infraccion){
+			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO")){
+				deuda+=vehiculos->datosInfraccion->monto;
+				j++;
+			}
+			infraccion = infraccion->infraccionProx;
 		} vehiculos=vehiculos->vehiculoProx;
 	}
 	i--;
 	if (!i) printf("\n\n\t\t\t\tNO POSEE VEHICULOS");
-	else printf("\n\n\t\tPosee un totoal de %i vehiculos",i);
-	if (deuda) printf("\n\t\tPosee una deuda de %i Bs\n",deuda);
-	else printf("\n\n\t\t\t\tNo posee deuda");
+	else printf("\n\n\t\tPosee un total de %i vehiculos",i);
+	
+	if (deuda) printf("\n\t\tPosee una deuda de %i Bs\n con %i infracciones sin pagar",deuda,j);
+	else printf("\n\n\t\t\t\tNo posee deuda (sin infraccion sin pagar)");
 	system("pause");
+}
+
+void funcionDosDosDos(){
+	int i,cedula, deuda=0, pagado=0;
+	struct persona *persona=NULL;
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!persona){
+		printf("Ingrese la cedula:");
+		scanf("%i",&cedula);
+		persona=buscarCedula(p,cedula);
+		if (!persona){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	printf("\n\tTitular:");
+	printf("\n\n\t\t\t- Nombre: %s",persona->nombre);
+	printf("\n\n\t\t\t- Apellidos: %s",persona->apellidos);
+	printf("\n\n\t\t\t- Cedula: %i",persona->cedula);
+	struct vehiculo *vehiculos=persona->datosVehiculo;
+	printf("\n\t   Vehiculos:\n");
+	for (i=1; vehiculos; i++){
+		printf("\n\t\tVehiculo %i\n",i);
+		printf("\n\t\tPlaca: %s",vehiculos->placa);
+		printf("\n\t\tMarca: %s",vehiculos->marca);
+		printf("\n\t\tModelo: %s",vehiculos->modelo);
+		printf("\n\t\tA%co: %i",164,vehiculos->annio.yy);
+		deuda=0; pagado=0;
+		while(vehiculos->datosInfraccion){
+			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO"))  deuda+=vehiculos->datosInfraccion->monto;
+			else pagado+=vehiculos->datosInfraccion->monto;
+			vehiculos->datosInfraccion = vehiculos->datosInfraccion->infraccionProx;
+		}
+		printf("\n\t\tDebe: %i",deuda);
+		printf("\n\t\tPagado: %i\n",pagado); 
+		vehiculos=vehiculos->vehiculoProx;
+	}	
 }
 ////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
 
