@@ -15,9 +15,9 @@ struct lugar{                                        //ESTRUCTURA LUGAR
 };
 
 struct infraccion{                                   //ESTRUCTURA INFRACCION
-	int numero;                              //NUMERO DE INFRACCION
+	int numero;                                        //NUMERO DE INFRACCION
 	struct fecha fechaInfraccion;                      //FECHA DE INFRACCION
-	char tipo[40];                           //TIPO DE INFRACCION
+	char tipo[40];                                     //TIPO DE INFRACCION
 	int monto;                                         //MONTO
 	char pagado[2];                                    //PAGADO
 	struct infraccion *infraccionProx;                 //APUNTADOR QUE VA A OTRAS INFRACCIONES
@@ -52,6 +52,10 @@ struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DE
 //													   DECLARARSE EN LAS FUNCIONES. APUNTA A LA PRIMERA PERSONA
 
 void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
+
+void validarDia(struct persona **t);                   //VALIDA EL DIA DE NACIMIENTO
+
+void validarMes(struct persona **t);                  //VALIDA EL MES DE NACIMIENTO
 
 void validarDia(struct persona **t);                   //VALIDA EL DIA DE NACIMIENTO
 
@@ -142,6 +146,18 @@ void mostrarPersona(struct persona *persona);
 void mostrarVehiculos(struct vehiculo *vehiculos);
 
 void mostrarInfracciones(struct infraccion *datosInfraccion);
+
+void swapStr( char A[],char B[]);
+
+void swapInt(int *A, int *B);
+
+void swapApun(struct infraccion **A, struct infraccion **B);
+
+void ordenarBurbuja(struct vehiculo **v);
+
+void funcionDosDosTres(struct persona *p);
+
+void funcionDosDosDos();
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 
@@ -314,9 +330,9 @@ void menuConsultasdos(){
 		switch (opcion){
 			case 1: funcionDosDosUno (); //LLAMADA A LA FUNCION 2.2.1 PARA BUSCAR LAS DEUDAS
 				break;
-			case 2: //LLAMADA A LA FUNCION 
+			case 2: funcionDosDosDos ();//LLAMADA A LA FUNCION 
 				break;
-			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
+			case 3: funcionDosDosTres(p);//LLAMADA A LA FUNCION consultaPorPlaca
 				break;
 			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
 				break;
@@ -749,6 +765,7 @@ void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
 		}
 	}
 	system("cls");
+	//ordenarBurbuja(&aux->datosVehiculo);
 	mostrarPersona(aux);
 	//freeBuffer();
 	printf("\n\n\t\t\tDesea guardar todos estos datos?");
@@ -787,7 +804,6 @@ void llamadaAgregarVehiculo(struct persona **p){
 	system("cls");
 	//freeBuffer();
 	auxVehiculo = agregarVehiculo();
-	
 	printf("\n\n\t\t\t     Desea guardar estos datos?");
 	printf("\n\t\t      Escriba (1) si desea cargar los datos: ");
 	scanf("%i",&posicion);
@@ -796,6 +812,7 @@ void llamadaAgregarVehiculo(struct persona **p){
 		auxPersona->datosVehiculo = auxVehiculo;
 		
 	}
+	//ordenarBurbuja(&aux->datosVehiculo);
 }
 
 void llamadaAgregarInfraccion(struct persona **p){
@@ -1405,7 +1422,6 @@ void consultarPersonaCedula(int cedula){
 	printf("\n\n\t\t\t- Direccion actual de residencia: %s\n",aux->place.direccion);
 }
 
-
 ////////////////////////////////////////////////////////FUNCIONES CONSULTA/BUSCAR//////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////FUNCIONES VALIDAR///////////////////////////////////////////////////////////////
@@ -1663,7 +1679,7 @@ void llamadaEliminarInfraccion(){
 ////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
 
 void funcionDosDosUno (){
-	int j,i=1,cedula, deuda=0;
+	int j=0,i=1,cedula, deuda=0;
 	struct persona *persona=NULL;
 	if (!p){
 		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
@@ -1692,8 +1708,8 @@ void funcionDosDosUno (){
 		printf("\n\t\tA%co: %i\n",164,vehiculos->annio.yy);
 		infraccion=vehiculos->datosInfraccion;
 		while(infraccion){
-			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO")){
-				deuda+=vehiculos->datosInfraccion->monto;
+			if (!strcmp(infraccion->pagado,"NO")){
+				deuda+=infraccion->monto;
 				j++;
 			}
 			infraccion = infraccion->infraccionProx;
@@ -1703,14 +1719,17 @@ void funcionDosDosUno (){
 	if (!i) printf("\n\n\t\t\t\tNO POSEE VEHICULOS");
 	else printf("\n\n\t\tPosee un total de %i vehiculos",i);
 	
-	if (deuda) printf("\n\t\tPosee una deuda de %i Bs\n con %i infracciones sin pagar",deuda,j);
+	if (deuda) printf("\n\t\tPosee una deuda de %i Bs con %i infracciones sin pagar",deuda,j);
 	else printf("\n\n\t\t\t\tNo posee deuda (sin infraccion sin pagar)");
+	printf("\n");
 	system("pause");
 }
 
 void funcionDosDosDos(){
 	int i,cedula, deuda=0, pagado=0;
 	struct persona *persona=NULL;
+	struct vehiculo *vehiculos;
+	struct infraccion *infracciones;
 	if (!p){
 		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
 		system("pause");
@@ -1730,7 +1749,8 @@ void funcionDosDosDos(){
 	printf("\n\n\t\t\t- Nombre: %s",persona->nombre);
 	printf("\n\n\t\t\t- Apellidos: %s",persona->apellidos);
 	printf("\n\n\t\t\t- Cedula: %i",persona->cedula);
-	struct vehiculo *vehiculos=persona->datosVehiculo;
+	
+	vehiculos=persona->datosVehiculo;
 	printf("\n\t   Vehiculos:\n");
 	for (i=1; vehiculos; i++){
 		printf("\n\t\tVehiculo %i\n",i);
@@ -1739,16 +1759,69 @@ void funcionDosDosDos(){
 		printf("\n\t\tModelo: %s",vehiculos->modelo);
 		printf("\n\t\tA%co: %i",164,vehiculos->annio.yy);
 		deuda=0; pagado=0;
-		while(vehiculos->datosInfraccion){
-			if (!strcmp(vehiculos->datosInfraccion->pagado,"NO"))  deuda+=vehiculos->datosInfraccion->monto;
-			else pagado+=vehiculos->datosInfraccion->monto;
-			vehiculos->datosInfraccion = vehiculos->datosInfraccion->infraccionProx;
+		infracciones = vehiculos->datosInfraccion;
+		while(infracciones){
+			if (!strcmp(infracciones->pagado,"NO")) deuda+=infracciones->monto;
+			else pagado+=infracciones->monto;
+			infracciones= infracciones->infraccionProx;
 		}
-		printf("\n\t\tDebe: %i",deuda);
-		printf("\n\t\tPagado: %i\n",pagado); 
+		printf("\n\n\t\t -Debe: %i",deuda);
+		printf("\n\t\t -Pagado: %i\n",pagado); 
+		vehiculos=vehiculos->vehiculoProx;
+	}
+	system("pause");
+}
+
+void funcionDosDosTres(struct persona *p){
+	int cedula, deuda=0;
+	struct persona *persona=NULL;
+	struct infraccion *infraccion;
+	struct vehiculo *vehiculos;
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!persona){
+		printf("Ingrese la cedula:");
+		scanf("%i",&cedula);
+		persona=buscarCedula(p,cedula);
+		if (!persona){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	printf("\n\t\tTitular: %s %s",persona->nombre, persona->apellidos);
+	
+	vehiculos=persona->datosVehiculo;
+	ordenarBurbuja(&vehiculos);
+	printf("\n\n\t\tMultas sin pagar:");
+	while (vehiculos){
+		printf("\n\n\n\t\tVehiculo %s",vehiculos->placa);
+		
+		infraccion = vehiculos->datosInfraccion;
+		for(int i=0; infraccion ; i++){
+			
+			if (!strcmp(infraccion->pagado,"NO")) {
+				printf("\n\n\t\t   Infraccion %i\n",i);
+				printf("\n\t\t   Fecha: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+				printf("\n\t\t   Numero: %i",infraccion->numero);
+				printf("\n\t\t   Tipo: %s",infraccion->tipo);
+				printf("\n\t\t   Monto: %i",infraccion->monto);
+				printf("\n\t\t   Pagada: %s",infraccion->pagado);
+				deuda+=vehiculos->datosInfraccion->monto;
+			}
+			
+			infraccion = infraccion->infraccionProx;
+		}
+		
 		vehiculos=vehiculos->vehiculoProx;
 	}	
+		printf("\n\n\n\t\tEl propietario %s debe un total de: %i Bs\n",persona->nombre,deuda);
+		system("pause");
 }
+
 ////////////////////////////////////////////////////////CONSULTAS DE ENUNCIADOS/////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////FUNCIONES MOSTRAR////////////////////////////////////////////////////////////////
@@ -1782,6 +1855,7 @@ void mostrarInfracciones(struct infraccion *datosInfraccion){
 		printf("\n\n\t\t\tDatos de la infraccion %i",i);
 		printf("\n\n\t\t\t - Numero Infraccion: %i",datosInfraccion->numero);
 		printf("\n\n\t\t\t - Tipo de infraccion: %s",datosInfraccion->tipo);
+		printf("\n\n\t\t\t - Monto: %i",datosInfraccion->monto);
 		printf("\n\n\t\t\t - Fecha de infraccion: %i/%i/%i",datosInfraccion->fechaInfraccion.dd,datosInfraccion->fechaInfraccion.mm,datosInfraccion->fechaInfraccion.yy);
 		printf("\n\n\t\t\t - Pagado: %s\n\n\t\t\t\t\t",datosInfraccion->pagado);
 		datosInfraccion=datosInfraccion->infraccionProx;
@@ -1789,3 +1863,51 @@ void mostrarInfracciones(struct infraccion *datosInfraccion){
 }
 
 ///////////////////////////////////////////////////////////FUNCIONES MOSTRAR////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////FUNCIONES ORDENAR////////////////////////////////////////////////////////////////
+void swapStr( char A[],char B[]){
+	
+	char temp[9];
+	strcpy(temp,B);
+	strcpy(B,A);
+	strcpy(A,temp);
+}
+
+void swapInt(int *A, int *B){
+	int pote;
+	pote = *A;
+	*A = *B;
+	*B = pote;
+}
+
+void swapApun(struct infraccion **A, struct infraccion **B){
+	struct infraccion *pote;
+	pote =*A;
+	*A = *B;
+	*B = pote;
+}
+
+void ordenarBurbuja(struct vehiculo **v){
+	struct vehiculo *aux;
+	int cambio = 1;
+	while (cambio){
+		cambio = 0;
+		aux = *v;
+		while(aux->vehiculoProx){
+			if(strcmp(aux->placa,aux->vehiculoProx->placa)==1 ){
+				cambio++;
+				swapStr(aux->placa,aux->vehiculoProx->placa); //intercambio placa
+				swapStr(aux->modelo,aux->vehiculoProx->modelo); //
+				swapStr(aux->marca,aux->vehiculoProx->marca);
+				swapStr(aux->color,aux->vehiculoProx->color);
+				swapInt(&aux->annio.yy,&aux->vehiculoProx->annio.yy);
+				swapApun(&aux->datosInfraccion, &aux->vehiculoProx->datosInfraccion);
+			}
+			aux=aux->vehiculoProx;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////FUNCIONES ORDENAR////////////////////////////////////////////////////////////////
+
+
