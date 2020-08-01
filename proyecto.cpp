@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include <string.h>
-#include <string>
+#include<string.h>
 
 struct fecha{                                        //ESTRUCTURA FECHA
 	int yy;                                            //AÑO
@@ -43,9 +42,133 @@ struct persona{                                      //ESTRUCTURA PERSONA
 	struct vehiculo *datosVehiculo;                    //APUNTADOR AL VEHICULO DE ESTA PERSONA
 };
 
+void guardarData(struct persona *p){
+	FILE* fichero;
+	fichero = fopen("dataproyecto.txt", "wt"); //fputs("lo que se quiere ir en el fichero", variable tipo fichero);
+	while(p){
+
+	p=p->personaProx;
+	};
+ 	fclose(fichero);
+}
+
 void freeBuffer(){                                   //LIBERARA EL BUFFER DE BASURA
 	char c;
 	while ((c = getchar()) != '\n' && c != EOF);
+}
+
+void llenarData(struct persona **p){
+	struct persona *persona;
+	struct vehiculo *vehiculo;
+	struct infraccion *infraccion;
+	FILE* fichero;
+	char linea[20];
+	char lineaaux[20];
+	fichero = fopen("dataproyecto.txt", "rt"); //fputs("lo que se quiere ir en el fichero", variable tipo fichero);
+	
+	if (fichero == NULL){
+	 	printf("No existe el fichero!\n");
+	 	system("pause");
+	 	return;
+	 }
+	 
+	while(!feof(fichero)){
+		fgets(linea,20,fichero);
+		if(feof(fichero))break;
+		if (!strcmp(linea,"PERSONA\n")){
+			persona = new struct persona;
+			
+			fgets(linea,20,fichero);
+			  strncpy(persona->nombre,linea,strlen(linea)-1);
+			  persona->nombre[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  strncpy(persona->apellidos,linea,strlen(linea)-1);
+			  persona->apellidos[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  persona->cedula = atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  persona->fechaNacimiento.dd = atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  persona->fechaNacimiento.mm = atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  persona->fechaNacimiento.yy = atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  strncpy(persona->place.ciudad,linea,strlen(linea)-1);
+			  persona->place.ciudad[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  strncpy(persona->place.direccion,linea,strlen(linea)-1);
+			  persona->place.direccion[strlen(linea)-1] = '\0';
+			  
+			persona->datosVehiculo = NULL;
+			
+			persona->personaProx = *p;
+			*p = persona;
+			
+		} else if (!strcmp(linea,"VEHICULO\n")){
+			vehiculo = new struct vehiculo;
+			
+			fgets(linea,20,fichero);
+			  strncpy(vehiculo->placa,linea,strlen(linea)-1);
+			  vehiculo->placa[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  strncpy(vehiculo->marca,linea,strlen(linea)-1);
+			  vehiculo->marca[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  strncpy(vehiculo->modelo,linea,strlen(linea)-1);
+			  vehiculo->modelo[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			  vehiculo->annio.yy=atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  strncpy(vehiculo->color,linea,strlen(linea)-1);
+			  vehiculo->color[strlen(linea)-1] = '\0';
+			  
+			vehiculo->datosInfraccion = NULL;
+			
+			vehiculo->vehiculoProx = (*p)->datosVehiculo;
+			(*p)->datosVehiculo = vehiculo;
+			
+		}else if (!strcmp(linea,"MULTAS\n")){
+			infraccion = new struct infraccion;
+			
+			fgets(linea,20,fichero);
+			  infraccion->numero=atoi(linea);
+			  
+			fgets(linea,20,fichero);
+			  strncpy(infraccion->tipo,linea,strlen(linea)-1);
+			  infraccion->tipo[strlen(linea)-1] = '\0';
+			  
+			fgets(linea,20,fichero);
+			infraccion->monto=atoi(linea);
+			
+			fgets(linea,20,fichero);
+			infraccion->fechaInfraccion.dd=atoi(linea);
+			
+			fgets(linea,20,fichero);
+			infraccion->fechaInfraccion.mm=atoi(linea);
+			
+			fgets(linea,20,fichero);
+			infraccion->fechaInfraccion.yy=atoi(linea);
+			
+			fgets(linea,20,fichero);
+			  strncpy(infraccion->pagado,linea,strlen(linea)-1);
+			  infraccion->pagado[strlen(linea)-1] = '\0';
+			  
+			infraccion->infraccionProx = (*p)->datosVehiculo->datosInfraccion;
+			(*p)->datosVehiculo->datosInfraccion = infraccion;
+		}
+	}
+	fclose(fichero);
 }
 
 struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DECLARA EN MAIN PARA PODER
@@ -160,7 +283,7 @@ void funcionDosDosTres(struct persona *p);
 void funcionDosDosDos();
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
-
+	llenarData(&p);
 	int opcion = 1;	
 	while(opcion){ //   **************************MENU PRINCIPAL*************************
 		encabezado();
