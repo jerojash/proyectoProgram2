@@ -44,9 +44,56 @@ struct persona{                                      //ESTRUCTURA PERSONA
 
 void guardarData(struct persona *p){
 	FILE* fichero;
-	fichero = fopen("dataproyecto.txt", "wt"); //fputs("lo que se quiere ir en el fichero", variable tipo fichero);
+	char linea[20];
+	struct vehiculo *v;
+	struct infraccion *f;
+	fichero = fopen("dataproyecto.txt", "w"); //fputs("lo que se quiere ir en el fichero", variable tipo fichero);
 	while(p){
-
+		fputs("PERSONA\n",fichero);
+		fputs(p->nombre,fichero);
+		fputs("\n",fichero);
+		fputs(p->apellidos,fichero);
+		fputs("\n",fichero);
+		fprintf(fichero, "%li\n",p->cedula);
+		fprintf(fichero, "%i\n",p->fechaNacimiento.dd);
+		fprintf(fichero, "%i\n",p->fechaNacimiento.mm);
+		fprintf(fichero, "%i\n",p->fechaNacimiento.yy);
+		fputs(p->place.ciudad,fichero);
+		fputs("\n",fichero);
+		fputs(p->place.direccion,fichero);
+		fputs("\n",fichero);
+		v = p->datosVehiculo;
+		while(v){
+			fputs("VEHICULO\n",fichero);
+			fputs(v->placa,fichero);
+			fputs("\n",fichero);
+			fputs(v->marca,fichero);
+			fputs("\n",fichero);
+			fputs(v->modelo,fichero);
+			fputs("\n",fichero);
+			fprintf(fichero, "%i\n",v->annio.yy);
+			fputs(v->color,fichero);
+			fputs("\n",fichero);
+			f = v->datosInfraccion;
+			while(f){
+				fputs("MULTAS\n",fichero);
+				fprintf(fichero, "%i\n",f->numero);
+				fputs(f->tipo,fichero);
+				fputs("\n",fichero);
+				fprintf(fichero, "%i\n",f->monto);
+				//fputs("\n",fichero);
+				fprintf(fichero, "%i\n",f->fechaInfraccion.dd);
+				//fputs("\n",fichero);
+				fprintf(fichero, "%i\n",f->fechaInfraccion.mm);
+				//fputs("\n",fichero);
+				fprintf(fichero, "%i\n",f->fechaInfraccion.yy);
+				//fputs("\n",fichero);
+				fputs(f->pagado,fichero);
+				fputs("\n",fichero);
+				f = f->infraccionProx;
+			} 
+			v = v->vehiculoProx;
+		} 
 	p=p->personaProx;
 	};
  	fclose(fichero);
@@ -64,7 +111,7 @@ void llenarData(struct persona **p){
 	FILE* fichero;
 	char linea[20];
 	char lineaaux[20];
-	fichero = fopen("dataproyecto.txt", "rt"); //fputs("lo que se quiere ir en el fichero", variable tipo fichero);
+	fichero = fopen("dataproyecto.txt", "r"); 
 	
 	if (fichero == NULL){
 	 	printf("No existe el fichero!\n");
@@ -282,10 +329,13 @@ void funcionDosDosTres(struct persona *p);
 
 void funcionDosDosDos();
 
+void funcionDosTres();
+
 int main(){         //*************************FUNCION PRINCIPAL***************************
 	llenarData(&p);
 	int opcion = 1;	
 	while(opcion){ //   **************************MENU PRINCIPAL*************************
+		system("cls");
 		encabezado();
 		printf("\t\t\t\t {POR FAVOR ESCRIBA LA OPCION QUE DESEA}\n\n");
 		printf("\t\t\t\t\t(1)--MANTENIMIENTO\n");
@@ -516,12 +566,12 @@ void menuConsultas(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: printf(""); consultarPersonaNombre(p);//LLAMADA A LA FUNCION consultaPorPersona
+			case 1: consultarPersonaNombre(p);//LLAMADA A LA FUNCION consultaPorPersona
 				break;
 			case 2: //LLAMADA A LA FUNCION menu2.2
 				menuConsultasdos();
 				break;
-			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
+			case 3: funcionDosTres();//LLAMADA A LA FUNCION consultaPorPlaca
 				break;
 			case 4: //LLAMADA A LA FUNCION menu2.4
 				menuConsultascuatro();
@@ -896,7 +946,7 @@ void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
 	printf("\n\t\t\tEscriba (1) si desea cargar los datos: ");
 	scanf("%i",&num);
 	if (num != 1)*p = auxP;
-
+	guardarData(*p);
 	freeBuffer();
 	system("cls");
 }
@@ -933,7 +983,7 @@ void llamadaAgregarVehiculo(struct persona **p){
 	if (posicion == 1){
 		auxVehiculo->vehiculoProx = auxPersona->datosVehiculo;
 		auxPersona->datosVehiculo = auxVehiculo;
-		
+		guardarData(*p);
 	}
 	//ordenarBurbuja(&aux->datosVehiculo);
 }
@@ -974,7 +1024,7 @@ void llamadaAgregarInfraccion(struct persona **p){
 	if (posicion == 1){
 		auxInfraccion->infraccionProx = auxVehiculo->datosInfraccion;
 		auxVehiculo->datosInfraccion = auxInfraccion;
-		
+		guardarData(*p);
 	}
 }
 ///////////////////////////////////////////////////////////FUNCIONES AGREGAR///////////////////////////////////////////////////////////////
@@ -1033,7 +1083,7 @@ void modificarVehiculo(struct persona **p){
 	printf("\n\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&vehiculo->annio.yy);
 	validarAnnioV(&vehiculo);             //**********VALIDACION DEL AÑO DEL MODELO VEHICULO************************
-	
+	guardarData(*p);
 	printf("\n\n\t\t\t\tDATOS GUARDADOS CON EXITO\n");
 	system("pause");
 	freeBuffer();
@@ -1154,7 +1204,7 @@ void modificarPersona(struct persona **p){
 		gets(aux->place.direccion);
 	}
 	strcpy(aux->place.direccion,strupr(aux->place.direccion));
-	
+	guardarData(*p);
 	printf("\n\n\t\t\t\tDATOS GUARDADOS CON EXITO\n");
 	system("pause");
 	freeBuffer();
@@ -1206,6 +1256,7 @@ void pagarInfraccion(){
 	if(numero == 1){
 		strcpy(aux->pagado, "SI");
 		printf("\n\n\n\n\t\t\t\t\tLA MULTA SE HA PAGADO CON EXITO\n\n\n");
+		guardarData(p);
 	}else printf("\n\n\n\n\t\t\t\t    NO SE HA PAGADO LA MULTA, INTENTE DE NUEVO\n\n\n");
 	
 	system("pause");
@@ -1263,6 +1314,7 @@ void moverInfraccion(){
 		vOrigen->datosInfraccion = vOrigen->datosInfraccion->infraccionProx;
 		f->infraccionProx = vDestino->datosInfraccion;
 		vDestino->datosInfraccion = f;
+		guardarData(p);
 		printf("\n\n\n\t\t\tDATOS MODIFICADOS EXITOSAMENTE");
 		system("pause");
 	}
@@ -1705,6 +1757,7 @@ void llamadaEliminarPersona(){
 		}
 	}
 	eliminarPersona(&p, cedula);
+	guardarData(p);
 	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
 	system("pause");
 }
@@ -1749,6 +1802,7 @@ void llamadaEliminarVehiculo(){
 		}
 	}
 	eliminarVehiculo(&persona, &persona->datosVehiculo,vehiculo->placa);
+	guardarData(p);
 	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
 	system("pause");
 }
@@ -1794,6 +1848,7 @@ void llamadaEliminarInfraccion(){
 		}
 	}
 	eliminarInfraccion(&vehiculo, &vehiculo->datosInfraccion,numero);
+	guardarData(p);
 	printf("\n\n\t\t\t\t\tSe ha eliminado con exito\n\n");
 	system("pause");
 }
@@ -1942,6 +1997,52 @@ void funcionDosDosTres(struct persona *p){
 		vehiculos=vehiculos->vehiculoProx;
 	}	
 		printf("\n\n\n\t\tEl propietario %s debe un total de: %i Bs\n",persona->nombre,deuda);
+		system("pause");
+}
+
+void funcionDosTres(){
+	int pagadas=0, impagadas=0;
+	char placa[8];
+	struct infraccion *infraccion;
+	struct vehiculo *vehiculo=NULL;
+	freeBuffer();
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!vehiculo){
+		system("cls");
+		printf("\n\n\t\t\tIngrese la placa: ");
+		gets(placa);
+		strcpy(placa,strupr(placa));
+		if (!strcmp(placa,"0")) return;
+		vehiculo=buscarPlaca(p, placa);
+		if (!vehiculo){
+			system("cls");
+			printf("\n\n\t\t\t\tLA PLACA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	system("cls");
+	infraccion = vehiculo->datosInfraccion;
+	printf("\n\n\t\t\t\t  Vehiculo\n\n");
+	printf("\t\tMarca: %s\t\tModelo:%s\n",vehiculo->marca,vehiculo->modelo);
+	printf("\n\t\tPlaca: %s\n",vehiculo->placa);
+	if(!infraccion)printf("\n\n\t\t\t    NO POSEE INFRACCIONES\n\n");
+	for (int i = 1; infraccion; i++) {
+		printf("\n\n\t\t\t\t Infraccion %i",i);
+		printf("\n\n\t\tNumero: %i",infraccion->numero);
+		printf("\n\t\tTipo: %s",infraccion->tipo);
+		printf("\n\t\tFecha: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+		printf("\n\t\tMonto: %i",infraccion->monto);
+		printf("\n\t\tPagado: %s",infraccion->pagado);
+		if (!strcmp(infraccion->pagado,"SI"))pagadas++;
+		else impagadas++;
+		infraccion = infraccion->infraccionProx;
+	}
+		printf("\n\n\t\tEl propietario tiene un total de %i infracciones pagadas",pagadas);
+		printf("\n\n\t\tEl propietario tiene un total de %i infracciones sin pagar\n\n",impagadas);
 		system("pause");
 }
 
