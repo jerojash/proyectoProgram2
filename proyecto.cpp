@@ -3,7 +3,7 @@
 #include<string.h>
 
 struct fecha{                                        //ESTRUCTURA FECHA
-	int yy;                                            //AÑO
+	int yy;                                            //AÃ‘O
 	int mm;                                            //MES
 	int dd;                                            //DIA
 };
@@ -26,7 +26,7 @@ struct vehiculo{                                     //ESTRUCTURA FECHA
 	char placa[20];                                    //PLACA (UNICO)
 	char marca[20];                                    //MARCA
 	char modelo[20];                                   //MODELO
-	struct fecha annio;                                //AÑO DEL VEHICULO
+	struct fecha annio;                                //AÃ‘O DEL VEHICULO
 	char color[10];                                    //COLOR DEL VEHICULO
 	struct vehiculo *vehiculoProx;                     //APUNTADOR AL PROXIMO VEHICULO
 	struct infraccion * datosInfraccion;               //APUNTADOR A LAS INFRACCION DE ESTE VEHICULO
@@ -221,7 +221,7 @@ void llenarData(struct persona **p){
 struct persona *p = NULL;                            //VARIABLE GLOBAL, NO SE DECLARA EN MAIN PARA PODER
 //													   DECLARARSE EN LAS FUNCIONES. APUNTA A LA PRIMERA PERSONA
 
-void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÚS
+void encabezado();                                   //ENCABEZADO PARA MOSTRAR EN LOS MENÃšS
 
 void validarDia(struct persona **t);                   //VALIDA EL DIA DE NACIMIENTO
 
@@ -231,11 +231,11 @@ void validarDia(struct persona **t);                   //VALIDA EL DIA DE NACIMI
 
 void validarMes(struct persona **t);                  //VALIDA EL MES DE NACIMIENTO
 
-void validarAnnio(struct persona **t);                //VALIDA EL AÑO DE NACIMIENTO
+void validarAnnio(struct persona **t);                //VALIDA EL AÃ‘O DE NACIMIENTO
 
 struct vehiculo * agregarVehiculo();                 //DEVULEVE UN APUNTADOR DE TIPO VEHICULO (NODO)
 
-void validarAnnioV(struct vehiculo **x);             //VALIDA EL AÑO DEL MODELO VEHICULO
+void validarAnnioV(struct vehiculo **x);             //VALIDA EL AÃ‘O DEL MODELO VEHICULO
 
 void agregarPersona(struct persona **p);             //AGREGAR UNA PERSONA AL SISTEMA
 
@@ -311,6 +311,10 @@ void llamadaEliminarInfraccion();
 
 void funcionDosDosUno ();
 
+void funcionDosDosCuatro(struct persona *p);
+
+void funcionDosDosCinco(struct persona *p);
+
 void mostrarPersona(struct persona *persona);
 
 void mostrarVehiculos(struct vehiculo *vehiculos);
@@ -323,13 +327,21 @@ void swapInt(int *A, int *B);
 
 void swapApun(struct infraccion **A, struct infraccion **B);
 
-void ordenarBurbuja(struct vehiculo **v);
+void ordenarBurbujaPlaca(struct vehiculo **v);
 
 void funcionDosDosTres(struct persona *p);
 
 void funcionDosDosDos();
 
 void funcionDosTres();
+
+void funcionesDosCuatro(struct persona *q, int num);
+
+void ordenarBurbujaNumeroMulta(struct infraccion **f);
+
+void ordenarPersonaCedula(struct persona **p, int btn);
+
+void ordenarBurbujaIFecha(struct infraccion **i);
 
 int main(){         //*************************FUNCION PRINCIPAL***************************
 	llenarData(&p);
@@ -468,7 +480,7 @@ void menuOperaMultas(){
 				break;
 			case 4: moverInfraccion();//LLAMADA A LA FUNCION moverMulta
 				break;
-			case 5: llamadaEliminarInfraccion();//LLAMADA A LA FUNCI�N eliminarMulta
+			case 5: llamadaEliminarInfraccion();//LLAMADA A LA FUNCIÓN eliminarMulta
 				break;
 		}
 	}
@@ -503,12 +515,13 @@ void menuConsultasdos(){
 		switch (opcion){
 			case 1: funcionDosDosUno (); //LLAMADA A LA FUNCION 2.2.1 PARA BUSCAR LAS DEUDAS
 				break;
-			case 2: funcionDosDosDos ();//LLAMADA A LA FUNCION 
+			case 2: funcionDosDosDos ();//LLAMADA A LA FUNCION 2.2.2
 				break;
-			case 3: funcionDosDosTres(p);//LLAMADA A LA FUNCION consultaPorPlaca
+			case 3: funcionDosDosTres(p);//LLAMADA A LA FUNCION 2.2.3
 				break;
-			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
+			case 4: funcionDosDosCuatro(p);//LLAMADA A LA FUNCION 2.2.4
 				break;
+			case 5: funcionDosDosCinco(p);//LLAMADA A LA FUNCION 2.2.5
 		}
 	}
 }
@@ -533,13 +546,9 @@ void menuConsultascuatro(){
 		scanf("%i",&opcion);
 		system("cls");
 		switch (opcion){
-			case 1: //LLAMADA A LA FUNCION consultaPorPersona
+			case 1: funcionesDosCuatro(p,0);//LLAMADA A LA FUNCION consultaPorPersona
 				break;
-			case 2: //LLAMADA A LA FUNCION 
-				break;
-			case 3: //LLAMADA A LA FUNCION consultaPorPlaca
-				break;
-			case 4: //LLAMADA A LA FUNCION consultaPorInfraccion
+			case 2: funcionesDosCuatro(p,1);//LLAMADA A LA FUNCION 
 				break;
 		}
 	}
@@ -661,7 +670,7 @@ struct infraccion * agregarInfraccion(){  //FUNCION PARA AGREGAR UNA INFRACCION 
 	
 		while(buscarInfraccion(auxInfraccion->numero)){
 			system("cls");
-			printf("\n\n\t\t\t\tEse numero de infraccion ya est� registrado\n\n");
+			printf("\n\n\t\t\t\tEse numero de infraccion ya está registrado\n\n");
 			system("pause");
 			system("cls");
 			printf("\n\t\t\tIngrese el numero de infraccion: "); 
@@ -710,7 +719,7 @@ struct infraccion * agregarInfraccion(){  //FUNCION PARA AGREGAR UNA INFRACCION 
 	printf("\n\t\t\tIngrese el a%co en que se registro la infraccion: ",164); 
 	scanf("%i",&(*auxInfraccion).fechaInfraccion.yy);
 	
-	while((auxInfraccion->fechaInfraccion.yy>2020)||(auxInfraccion->fechaInfraccion.yy<1)){  //**********VALIDACION DEL AÑO DE REGISTRO INFRACCION****************
+	while((auxInfraccion->fechaInfraccion.yy>2020)||(auxInfraccion->fechaInfraccion.yy<1)){  //**********VALIDACION DEL AÃ‘O DE REGISTRO INFRACCION****************
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
 		system("pause");
@@ -782,7 +791,7 @@ struct vehiculo * agregarVehiculo(){ //FUNCION PARA AGREGAR UN VEHICULO A UNA PE
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&auxVehiculo->annio.yy);
-	validarAnnioV(&auxVehiculo);             //**********VALIDACION DEL AÑO DEL MODELO VEHICULO************************
+	validarAnnioV(&auxVehiculo);             //**********VALIDACION DEL AÃ‘O DEL MODELO VEHICULO************************
 		
 	freeBuffer();
 	printf("\n\t\t\tIngrese el color del vehiculo: "); 
@@ -875,7 +884,7 @@ void agregarPersona(struct persona **p){ //FUNCION PARA AGREGAR UNA PERSONA
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
-	validarAnnio(&aux);                     //**********VALIDACION DEL AÑO DE NACIMIENTO************************
+	validarAnnio(&aux);                     //**********VALIDACION DEL AÃ‘O DE NACIMIENTO************************
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -1082,7 +1091,7 @@ void modificarVehiculo(struct persona **p){
 	
 	printf("\n\n\t\t\tIngrese el a%co (yyyy): ",164); 
 	scanf("%i",&vehiculo->annio.yy);
-	validarAnnioV(&vehiculo);             //**********VALIDACION DEL AÑO DEL MODELO VEHICULO************************
+	validarAnnioV(&vehiculo);             //**********VALIDACION DEL AÃ‘O DEL MODELO VEHICULO************************
 	guardarData(*p);
 	printf("\n\n\t\t\t\tDATOS GUARDADOS CON EXITO\n");
 	system("pause");
@@ -1163,7 +1172,7 @@ void modificarPersona(struct persona **p){
 	
 	printf("\n\t\t\tIngrese el a%co (yyyy) de nacimiento: ",164);
 	scanf("%i",&aux->fechaNacimiento.yy);
-	validarAnnio(&aux);                     //**********VALIDACION DEL AÑO DE NACIMIENTO************************
+	validarAnnio(&aux);                     //**********VALIDACION DEL AÃ‘O DE NACIMIENTO************************
 	
 	freeBuffer();
 	printf("\n\t\t\tIngrese la ciudad de nacimiento (40 caracteres max): ");
@@ -1344,6 +1353,16 @@ struct vehiculo *buscarPlaca(struct persona *q, char placa[8]){ //Retorna NULL s
 		q = q->personaProx;
 	} return NULL;
 }
+
+struct vehiculo *buscarPlaca2(struct persona *q, char placa[8]){ //Retorna NULL si no consigue la placa.			   	   //sino, retorna el apuntador de esa placa
+	struct vehiculo *vehiculo = q->datosVehiculo;
+	while(vehiculo){
+		if (!strcmp(placa,vehiculo->placa)) return vehiculo;
+		vehiculo=vehiculo->vehiculoProx;
+	} return NULL;
+}
+	
+	
 
 struct persona * buscarCedula(struct persona *r, int cedula){ //Retorna NULL si no consigue la cedula.		  //sino, retorna el apuntador de esa placa
 	while(r){
@@ -1630,7 +1649,7 @@ void validarMes(struct persona **t){
 }
 
 void validarAnnio(struct persona **t){
-	while(((*t)->fechaNacimiento.yy>2020)||((*t)->fechaNacimiento.yy<1)){ //**********VALIDACION DEL AÑO DE NACIMIENTO************************
+	while(((*t)->fechaNacimiento.yy>2020)||((*t)->fechaNacimiento.yy<1)){ //**********VALIDACION DEL AÃ‘O DE NACIMIENTO************************
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
 		system("pause");
@@ -1645,7 +1664,7 @@ void validarAnnio(struct persona **t){
 	}
 }
 
-void validarAnnioV(struct vehiculo **x){                             //**********VALIDACION DEL AÑO DEL MODELO VEHICULO************************
+void validarAnnioV(struct vehiculo **x){                             //**********VALIDACION DEL AÃ‘O DEL MODELO VEHICULO************************
 	while(((*x)->annio.yy>2020)||((*x)->annio.yy<1)){               
 		system("cls");
 		printf("\n\n\t\t\t\tIngrese un valor valido (desde 1 hasta 2020)\n\n");
@@ -1865,8 +1884,10 @@ void funcionDosDosUno (){
 		return;
 	}	
 	while (!persona){
-		printf("Ingrese la cedula:");
+		printf("\n\n\t\t\tIngrese el numero de cedula que desea buscar");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 		scanf("%i",&cedula);
+		if(!cedula)return;
 		persona=buscarCedula(p,cedula);
 		if (!persona){
 			system("cls");
@@ -1914,8 +1935,10 @@ void funcionDosDosDos(){
 		return;
 	}	
 	while (!persona){
-		printf("Ingrese la cedula:");
+		printf("\n\n\t\t\tIngrese el numero de cedula que desea buscar");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 		scanf("%i",&cedula);
+		if (!cedula)return;
 		persona=buscarCedula(p,cedula);
 		if (!persona){
 			system("cls");
@@ -1961,8 +1984,10 @@ void funcionDosDosTres(struct persona *p){
 		return;
 	}	
 	while (!persona){
-		printf("Ingrese la cedula:");
+		printf("\n\n\t\t\tIngrese el numero de cedula que desea buscar");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 		scanf("%i",&cedula);
+		if(!cedula)return;
 		persona=buscarCedula(p,cedula);
 		if (!persona){
 			system("cls");
@@ -1973,7 +1998,7 @@ void funcionDosDosTres(struct persona *p){
 	printf("\n\t\tTitular: %s %s",persona->nombre, persona->apellidos);
 	
 	vehiculos=persona->datosVehiculo;
-	ordenarBurbuja(&vehiculos);
+	ordenarBurbujaPlaca(&vehiculos);
 	printf("\n\n\t\tMultas sin pagar:");
 	while (vehiculos){
 		printf("\n\n\n\t\tVehiculo %s",vehiculos->placa);
@@ -2000,6 +2025,136 @@ void funcionDosDosTres(struct persona *p){
 		system("pause");
 }
 
+void funcionDosDosCuatro(struct persona *p){ //Dada una placa mostrar todas las multas completas que ha tenido ordenadas por fecha ascendente. Primero las que no han sido pagadas y luego las ya canceladas.
+	int cedula;
+	char placa[8];
+	struct persona *persona=NULL;
+	struct infraccion *infraccion;
+	struct vehiculo *vehiculo=NULL;
+	freeBuffer();
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!persona){
+		printf("\n\n\t\t\tIngrese el numero de cedula que desea buscar");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+		scanf("%i",&cedula);
+		if(!cedula)return;
+		persona=buscarCedula(p,cedula);
+		if (!persona){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	printf("\n\t\tTitular: %s %s\n\n",persona->nombre, persona->apellidos);
+	system("pause");
+	while (!vehiculo){
+		system("cls");
+		freeBuffer();
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+		gets(placa);
+		strcpy(placa,strupr(placa));
+		if (!strcmp(placa,"0")) return;
+		vehiculo=buscarPlaca2(persona, placa);
+		if (!vehiculo){
+			system("cls");
+			printf("\n\n\t\t\t\tLA PLACA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	system("cls");
+	infraccion = vehiculo->datosInfraccion;
+	printf("\n\n\t\tVehiculo %s\n",placa);
+	if(!infraccion)printf("\n\n\t\tNO POSEE INFRACCIONES\n\n");
+	else{
+		ordenarBurbujaIFecha(&infraccion);//ordenar por fecha de infraccion
+		for (int i = 1; infraccion; i++) {
+			if(!strcmp(infraccion->pagado,"NO")){
+				printf("\n\n\t\t Multas no pagadas");
+				printf("\n\n\t\t\t\t Infraccion %i",i);
+				printf("\n\n\t\tNumero: %i",infraccion->numero);
+				printf("\n\t\tTipo: %s",infraccion->tipo);
+				printf("\n\t\tFecha: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+				printf("\n\t\tMonto: %i",infraccion->monto);
+				printf("\n\t\tPagado: %s",infraccion->pagado);
+			}
+			infraccion = infraccion->infraccionProx;
+		}
+		infraccion = vehiculo->datosInfraccion;
+		//ordenar por fecha de infraccion
+		for (int i = 1; infraccion; i++) {
+			if(!strcmp(infraccion->pagado,"SI")){
+				printf("\n\n\t\t Multas pagadas");
+				printf("\n\n\t\t\t\t Infraccion %i",i);
+				printf("\n\n\t\tNumero: %i",infraccion->numero);
+				printf("\n\t\tTipo: %s",infraccion->tipo);
+				printf("\n\t\tFecha: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+				printf("\n\t\tMonto: %i",infraccion->monto);
+				printf("\n\t\tPagado: %s",infraccion->pagado);
+			}
+			infraccion = infraccion->infraccionProx;
+		}
+	}
+	system("pause");	
+}
+
+void funcionDosDosCinco(struct persona *p){ //Dado un tipo de infracción mostrar todas las multas completas que ha tenido agrupadas por vehículo (placa, marca, año) ordenadas por fecha de infracción (ascendente).
+	int cedula;
+	char tipo[40];
+	struct persona *persona=NULL;
+	struct infraccion *infraccion;
+	struct vehiculo *vehiculo;
+	freeBuffer();
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}	
+	while (!persona){
+				printf("\n\tIngrese la cedula (Ya debe estar registrado en el sistema)");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+		scanf("%i",&cedula);
+		if (!cedula) return;
+		persona=buscarCedula(p,cedula);
+		if (!persona){
+			system("cls");
+			printf("\n\n\t\t\t\tLA CEDULA NO ESTA REGISTRADA EN EL SISTEMA\n\n");
+			system("pause");
+		}
+	}
+	printf("\n\t\tTitular: %s %s\n\n",persona->nombre, persona->apellidos);
+	freeBuffer();
+	printf("\n\n\t\tIngrese el tipo de infraccion: ");
+	gets(tipo);
+	strcpy(tipo,strupr(tipo));
+	vehiculo = persona->datosVehiculo;
+		while(vehiculo->vehiculoProx){
+			infraccion=vehiculo->datosInfraccion;
+			ordenarBurbujaIFecha(&infraccion);//ordenar por fecha de infraccion
+			while (infraccion){
+				if ((strcmp(tipo,infraccion->tipo))==0) {
+					printf("\n\n\t\t\tDatos del vehiculo");
+					printf("\n\n\t\t\t  - Placa: %s",vehiculo->placa);
+					printf("\n\n\t\t\t  - Marca: %s",vehiculo->marca);
+					printf("\n\n\t\t\t  - Modelo: %s",vehiculo->modelo);
+					printf("\n\n\t\t\t  - Color: %s",vehiculo->color);
+					printf("\n\n\t\t\t  - A%co: %i\n\n\t\t\t\t\t\t",164,vehiculo->annio.yy);
+					printf("\n\n\t\t\tDatos de la infraccion");
+					printf("\n\n\t\t\t - Numero Infraccion: %i",infraccion->numero);
+					printf("\n\n\t\t\t - Tipo de infraccion: %s",infraccion->tipo);
+					printf("\n\n\t\t\t - Fecha de infraccion: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+					printf("\n\n\t\t\t - Pagado: %s\n\n\t\t\t\t\t",infraccion->pagado);
+				}	
+				infraccion=infraccion->infraccionProx;
+			}
+			vehiculo=vehiculo->vehiculoProx;
+		}
+	system("pause");
+}
+
 void funcionDosTres(){
 	int pagadas=0, impagadas=0;
 	char placa[8];
@@ -2013,7 +2168,8 @@ void funcionDosTres(){
 	}	
 	while (!vehiculo){
 		system("cls");
-		printf("\n\n\t\t\tIngrese la placa: ");
+		printf("\n\tIngrese la placa del vehiculo (Ya debe estar registrado en el sistema)");
+		printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 		gets(placa);
 		strcpy(placa,strupr(placa));
 		if (!strcmp(placa,"0")) return;
@@ -2026,10 +2182,9 @@ void funcionDosTres(){
 	}
 	system("cls");
 	infraccion = vehiculo->datosInfraccion;
-	printf("\n\n\t\t\t\t  Vehiculo\n\n");
-	printf("\t\tMarca: %s\t\tModelo:%s\n",vehiculo->marca,vehiculo->modelo);
-	printf("\n\t\tPlaca: %s\n",vehiculo->placa);
-	if(!infraccion)printf("\n\n\t\t\t    NO POSEE INFRACCIONES\n\n");
+	ordenarBurbujaNumeroMulta(&infraccion);
+	printf("\n\n\t\tVehiculo %s\n",placa);
+	if(!infraccion)printf("\n\n\t\tNO POSEE INFRACCIONES\n\n");
 	for (int i = 1; infraccion; i++) {
 		printf("\n\n\t\t\t\t Infraccion %i",i);
 		printf("\n\n\t\tNumero: %i",infraccion->numero);
@@ -2043,6 +2198,69 @@ void funcionDosTres(){
 	}
 		printf("\n\n\t\tEl propietario tiene un total de %i infracciones pagadas",pagadas);
 		printf("\n\n\t\tEl propietario tiene un total de %i infracciones sin pagar\n\n",impagadas);
+		system("pause");
+}
+
+void funcionesDosCuatro(struct persona *q, int num){
+	int year1 = 0, year2 = 0, cont =0, monto=0;
+	char tipo[25],pagado[2];
+	struct persona *persona=q;
+	struct infraccion *infraccion;
+	struct vehiculo *vehiculos;
+	if (!p){
+		printf("\n\n\t\tLa base de datos esta vacia. Agregue una persona al sistema primero\n\n");
+		system("pause");
+		return;
+	}
+			
+	printf("\n\n\t\tIngrese un primer a%co: ",164,year1);
+	printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+	scanf("%i",&year1);	
+	if(!year1) return;
+	printf("\n\n\t\tIngrese un primer a%co: ",164,year1);
+	printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+	scanf("%i",&year2);
+	if(!year1) return;
+	freeBuffer();
+	printf("\n\n\t\tIngrese el tipo de infraccion: ");
+	printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
+	gets(tipo);
+	strcpy(tipo,strupr(tipo));
+	if (!strcmp(tipo,"0"))return;
+	ordenarPersonaCedula(&p, num);
+	if (num)strcpy(pagado,"SI"); //Funcion 2.4.2
+	else strcpy(pagado,"NO");    //Funcion 2.4.1
+	system("cls");
+	
+	while(persona){
+		vehiculos = persona->datosVehiculo;
+		while(vehiculos){
+			infraccion=vehiculos->datosInfraccion;
+			//printf("\tPersona: %s\n",persona->nombre);
+			while (infraccion){
+				//printf("\t\tComparo:\n\t\t-%s-\n\t\t-%s-\n\n",infraccion->tipo,tipo);
+				if(!strcmp(infraccion->tipo,tipo)&&!strcmp(infraccion->pagado,pagado)&&infraccion->fechaInfraccion.yy>=year1&&infraccion->fechaInfraccion.yy<=year2){
+					cont++;
+					printf("\n\n\t\tInfraccion %i",cont);
+					printf("\n\n\t\tNombre y Apellido del propietario: %s %s",persona->nombre,persona->apellidos);
+					printf("\n\t\tCedula del propietario: %i",persona->cedula);
+					printf("\n\t\tPlaca del vehiculo: %s",vehiculos->placa);
+					printf("\n\t\tMarca del vehiculo: %s",vehiculos->marca);
+					printf("\n\t\tA%co del vehiculo: %i",164,vehiculos->annio.yy);
+					printf("\n\t\tFecha de multa: %i/%i/%i",infraccion->fechaInfraccion.dd,infraccion->fechaInfraccion.mm,infraccion->fechaInfraccion.yy);
+					printf("\n\t\tMonto: %i\n",infraccion->monto);
+					monto+=infraccion->monto;
+				}
+				infraccion = infraccion->infraccionProx;
+			}
+			vehiculos= vehiculos->vehiculoProx;	
+		}
+		persona = persona->personaProx;
+	}	
+		if (!cont) printf("\n\n\t\tNo se encontraron infracciones con esos datos\n\n");
+		if (num) strcpy(tipo,"un total de ingresos");
+		else strcpy(tipo,"una deuda total");
+		printf("\n\n\t\tEl sistema posee %s de %i Bs por este tipo de multa\n\n",tipo,monto);
 		system("pause");
 }
 
@@ -2097,6 +2315,13 @@ void swapStr( char A[],char B[]){
 	strcpy(A,temp);
 }
 
+void swapLongInt(long int *A, long int *B){
+	long int pote;
+	pote = *A;
+	*A = *B;
+	*B = pote;
+}
+
 void swapInt(int *A, int *B){
 	int pote;
 	pote = *A;
@@ -2104,14 +2329,21 @@ void swapInt(int *A, int *B){
 	*B = pote;
 }
 
-void swapApun(struct infraccion **A, struct infraccion **B){
+void swapApunVe(struct vehiculo **A, struct vehiculo **B){
+	struct vehiculo *pote;
+	pote =*A;
+	*A = *B;
+	*B = pote;
+}
+
+void swapApunInf(struct infraccion **A, struct infraccion **B){
 	struct infraccion *pote;
 	pote =*A;
 	*A = *B;
 	*B = pote;
 }
 
-void ordenarBurbuja(struct vehiculo **v){
+void ordenarBurbujaPlaca(struct vehiculo **v){
 	struct vehiculo *aux;
 	int cambio = 1;
 	while (cambio){
@@ -2125,13 +2357,95 @@ void ordenarBurbuja(struct vehiculo **v){
 				swapStr(aux->marca,aux->vehiculoProx->marca);
 				swapStr(aux->color,aux->vehiculoProx->color);
 				swapInt(&aux->annio.yy,&aux->vehiculoProx->annio.yy);
-				swapApun(&aux->datosInfraccion, &aux->vehiculoProx->datosInfraccion);
+				swapApunInf(&aux->datosInfraccion, &aux->vehiculoProx->datosInfraccion);
 			}
 			aux=aux->vehiculoProx;
 		}
 	}
 }
 
+void ordenarBurbujaNumeroMulta(struct infraccion **f){
+	struct infraccion *aux;
+	int cambio = 1;
+	while (cambio){
+		cambio = 0;
+		aux = *f;
+		while(aux->infraccionProx){
+			if(aux->numero > aux->infraccionProx->numero){
+				cambio++;
+				swapStr(aux->tipo,aux->infraccionProx->tipo); //intercambio placa
+				swapStr(aux->pagado,aux->infraccionProx->pagado); //
+				swapInt(&aux->numero,&aux->infraccionProx->numero);
+				swapInt(&aux->monto,&aux->infraccionProx->monto);
+				swapInt(&aux->fechaInfraccion.dd,&aux->infraccionProx->fechaInfraccion.dd);
+				swapInt(&aux->fechaInfraccion.mm,&aux->infraccionProx->fechaInfraccion.mm);
+				swapInt(&aux->fechaInfraccion.yy,&aux->infraccionProx->fechaInfraccion.yy);
+			}
+			aux=aux->infraccionProx;
+		}
+	}
+}
+
+void ordenarPersonaCedula(struct persona **p, int btn){ //Es cero si se quiere descendente. Es 1 si se quiere ascendente
+	struct persona *aux;
+	int cambio = 1;
+	while (cambio){
+		cambio = 0;
+		aux = *p;
+		while(aux->personaProx){
+			if (btn){
+				if(aux->cedula > aux->personaProx->cedula){
+					cambio++;
+					swapStr(aux->nombre,aux->personaProx->nombre); //intercambio placa
+					swapStr(aux->apellidos,aux->personaProx->apellidos); //
+					swapStr(aux->place.ciudad,aux->personaProx->place.ciudad);
+					swapStr(aux->place.direccion,aux->personaProx->place.direccion);
+					swapLongInt(&aux->cedula,&aux->personaProx->cedula);
+					swapInt(&aux->fechaNacimiento.dd,&aux->personaProx->fechaNacimiento.dd);
+					swapInt(&aux->fechaNacimiento.mm,&aux->personaProx->fechaNacimiento.mm);
+					swapInt(&aux->fechaNacimiento.yy,&aux->personaProx->fechaNacimiento.yy);
+				}	
+			}else{
+				if(aux->cedula < aux->personaProx->cedula){
+					cambio++;
+					swapStr(aux->nombre,aux->personaProx->nombre); //intercambio placa
+					swapStr(aux->apellidos,aux->personaProx->apellidos); //
+					swapStr(aux->place.ciudad,aux->personaProx->place.ciudad);
+					swapStr(aux->place.direccion,aux->personaProx->place.direccion);
+					swapLongInt(&aux->cedula,&aux->personaProx->cedula);
+					swapInt(&aux->fechaNacimiento.dd,&aux->personaProx->fechaNacimiento.dd);
+					swapInt(&aux->fechaNacimiento.mm,&aux->personaProx->fechaNacimiento.mm);
+					swapInt(&aux->fechaNacimiento.yy,&aux->personaProx->fechaNacimiento.yy);
+					swapApunVe(&aux->datosVehiculo,&aux->personaProx->datosVehiculo);
+				}
+			}
+			
+			aux=aux->personaProx;
+		}
+	}
+}
+
+void ordenarBurbujaIFecha(struct infraccion **i){    //FUNCION PARA ORDENAR LAS INFRACCIONES POR FECHA
+	struct infraccion *aux;
+	int fecha,fecha2,cambio = 1;
+	while (cambio){
+		cambio = 0;
+		aux = *i;
+		fecha=(((((aux->fechaInfraccion.yy)*100)+(aux->fechaInfraccion.mm))*100)+(aux->fechaInfraccion.dd));
+		fecha2=(((((aux->infraccionProx->fechaInfraccion.yy)*100)+(aux->infraccionProx->fechaInfraccion.mm))*100)+(aux->infraccionProx->fechaInfraccion.dd));
+		while(aux->infraccionProx){
+			if (fecha > fecha2){
+				cambio++;
+				swapStr(aux->tipo,aux->infraccionProx->tipo); 
+				swapStr(aux->pagado,aux->infraccionProx->pagado); 
+				swapInt(&aux->numero,&aux->infraccionProx->numero);
+				swapInt(&aux->monto,&aux->infraccionProx->monto);
+				swapInt(&aux->fechaInfraccion.dd,&aux->infraccionProx->fechaInfraccion.dd);
+				swapInt(&aux->fechaInfraccion.mm,&aux->infraccionProx->fechaInfraccion.mm);
+				swapInt(&aux->fechaInfraccion.yy,&aux->infraccionProx->fechaInfraccion.yy);
+			}
+			aux=aux->infraccionProx;
+		}
+	}
+}
 ///////////////////////////////////////////////////////////FUNCIONES ORDENAR////////////////////////////////////////////////////////////////
-
-
