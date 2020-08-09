@@ -2344,7 +2344,7 @@ void funcionDosDosCinco(struct persona *p){ //FUNCION OPCION 2.2.5 DEL MENU
 	} cedula = 0; 
 		while(vehiculo){
 			infraccion=vehiculo->datosInfraccion;
-			if(infraccion) ordenarBurbujaIFecha(&infraccion);//ordenar por fecha de infraccion
+			if(infraccion && infraccion->infraccionProx) ordenarBurbujaIFecha(&infraccion);//ordenar por fecha de infraccion
 			while (infraccion){
 				if ((strcmp(tipo,infraccion->tipo))==0) {
 					cedula++;
@@ -2642,14 +2642,13 @@ void ordenarBurbujaIFecha(struct infraccion **i){    //FUNCION PARA ORDENAR LAS 
 	struct infraccion *aux;
 	int fecha,fecha2,cambio = 1;
 	while (cambio){
-		printf("\nEntro al while cambio");
 		cambio = 0;
 		aux = *i;
+		if(!aux->infraccionProx) return; //Si solo tiene una infraccion
 		fecha=(((((aux->fechaInfraccion.yy)*100)+(aux->fechaInfraccion.mm))*100)+(aux->fechaInfraccion.dd));
 		fecha2=(((((aux->infraccionProx->fechaInfraccion.yy)*100)+(aux->infraccionProx->fechaInfraccion.mm))*100)+(aux->infraccionProx->fechaInfraccion.dd));
 		
 		while(aux->infraccionProx){
-			printf("\nEntro al while infraccion");
 			if (fecha > fecha2){
 				cambio++;
 				swapStr(aux->tipo,aux->infraccionProx->tipo); 
@@ -2662,8 +2661,6 @@ void ordenarBurbujaIFecha(struct infraccion **i){    //FUNCION PARA ORDENAR LAS 
 			}
 			aux=aux->infraccionProx;
 		}
-			printf("\n\n\nSalgo del while aux");
 	}
-		printf("\n\nSalgo del while cambio");
 }
 ///////////////////////////////////////////////////////////FUNCIONES ORDENAR////////////////////////////////////////////////////////////////
