@@ -2395,9 +2395,14 @@ void funcionDosTres(struct persona *p){                                  //FUNCI
 	}
 	system("cls");
 	infraccion = vehiculo->datosInfraccion;
-	ordenarBurbujaNumeroMulta(&infraccion);
 	printf("\n\n\t\tVehiculo %s\n",placa);
-	if(!infraccion)printf("\n\n\t\tNO POSEE INFRACCIONES\n\n");
+	if(!infraccion){
+		printf("\n\n\t\tNO POSEE INFRACCIONES\n\n");
+		system("pause");
+		system("cls");
+		return;
+	}
+	ordenarBurbujaNumeroMulta(&infraccion);
 	for (int i = 1; infraccion; i++) {
 		printf("\n\n\t\t\t\t Infraccion %i",i);
 		printf("\n\n\t\tNumero: %i",infraccion->numero);
@@ -2430,7 +2435,7 @@ void funcionesDosCuatro(struct persona *q, int num){                            
 	printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 	scanf("%i",&year1);	
 	if(!year1) return;
-	printf("\n\n\t\tIngrese un primer a%co: ",164,year1);
+	printf("\n\n\t\tIngrese un segundo a%co: ",164,year1);
 	printf("\n\n\t\t\t(0) Salir\n\n\t\t\t\t");
 	scanf("%i",&year2);
 	if(!year1) return;
